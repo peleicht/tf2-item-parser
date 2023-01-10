@@ -1,0 +1,17 @@
+{
+	"compilerOptions": {
+		"target": "ES6",
+		"module": "es2022",
+		"moduleResolution": "node",
+		"esModuleInterop": true,
+		"declaration": true,
+		"strict": true,
+		"allowSyntheticDefaultImports": true,
+		"skipLibCheck": true,
+		"sourceMap": true,
+		"outDir": "dist",
+		"allowJs": true
+	},
+	"include": ["**/*.ts", "enums/EStrangeParts"],
+	"exclude": ["node_modules", "dist", "test", "types/node-tf2-item-format"]
+}
