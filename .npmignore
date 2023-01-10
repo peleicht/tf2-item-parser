@@ -1,3 +1,7 @@
 *.ts
+!*.d.ts
+*.map
 tsconfig.json
 prettierrc.json
+.vscode
+test

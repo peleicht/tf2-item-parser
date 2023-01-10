@@ -108,8 +108,36 @@ export default class BPDocumentItem extends BaseItem {
 
 		this.item_number = item.crateSeries;
 
-		if (item.recipe) {
-			if (this.def_index != 20000) this.target_def_index = this.correctDefIndex(item.recipe.targetItem._source.defindex);
+		if (item.recipe && item.recipe.targetItem) {
+			if (item.recipe.targetItem) {
+				if (this.def_index != 20000) this.target_def_index = this.correctDefIndex(item.recipe.targetItem._source.defindex);
+
+				if (this.def_index == 5661) {
+					//strangifier
+					this.output_item = {
+						def_index: this.target_def_index,
+						quality: 11,
+					};
+				} else if (this.def_index == 20002) {
+					//killstreak kit fabricator
+					this.output_item = {
+						item: new BaseItem({
+							def_index: 5726,
+							quality: 6,
+							name: "Kit",
+							craftable: false,
+							killstreak:
+								item.recipe!.outputItem!.defindex == 20002 ? EItemKillstreak["Specialized Killstreak"] : EItemKillstreak["Professional Killstreak"],
+							killstreak_sheen: this.killstreak_sheen,
+							killstreaker: this.killstreaker,
+							target_def_index: this.target_def_index,
+						}),
+					};
+					this.killstreak = this.output_item.item!.killstreak;
+					this.killstreak_sheen = this.output_item.item!.killstreak_sheen;
+					this.killstreaker = this.output_item.item!.killstreaker;
+				}
+			}
 
 			if (item.recipe.inputItems) {
 				this.input_items = [];
@@ -117,32 +145,6 @@ export default class BPDocumentItem extends BaseItem {
 					const ins = new Array(input.quantity).fill(input.name);
 					this.input_items = this.input_items!.concat(ins);
 				}
-			}
-
-			if (this.def_index == 5661) {
-				//strangifier
-				this.output_item = {
-					def_index: this.target_def_index,
-					quality: 11,
-				};
-			} else if (this.def_index == 20002) {
-				//killstreak kit fabricator
-				this.output_item = {
-					item: new BaseItem({
-						def_index: 5726,
-						quality: 6,
-						name: "Kit",
-						craftable: false,
-						killstreak:
-							item.recipe!.outputItem!.defindex == 20002 ? EItemKillstreak["Specialized Killstreak"] : EItemKillstreak["Professional Killstreak"],
-						killstreak_sheen: this.killstreak_sheen,
-						killstreaker: this.killstreaker,
-						target_def_index: this.target_def_index,
-					}),
-				};
-				this.killstreak = this.output_item.item!.killstreak;
-				this.killstreak_sheen = this.output_item.item!.killstreak_sheen;
-				this.killstreaker = this.output_item.item!.killstreaker;
 			}
 
 			if (item.recipe.outputItem) {
@@ -159,14 +161,16 @@ export default class BPDocumentItem extends BaseItem {
 						};
 						this.item_number = 3;
 					} else {
-						this.output_item = {
-							item: new BaseItem({
-								def_index: 5661,
-								quality: 6,
-								name: "Strangifier",
-								target_def_index: this.correctDefIndex(item.recipe.targetItem._source.defindex),
-							}),
-						};
+						if (item.recipe.targetItem) {
+							this.output_item = {
+								item: new BaseItem({
+									def_index: 5661,
+									quality: 6,
+									name: "Strangifier",
+									target_def_index: this.correctDefIndex(item.recipe.targetItem._source.defindex),
+								}),
+							};
+						}
 						this.item_number = 2;
 					}
 				}
