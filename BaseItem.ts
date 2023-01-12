@@ -78,7 +78,8 @@ export default class BaseItem implements ItemTraits {
 	never_tradable?: boolean; //some items are untradable now, but may become tradable later (i.e. after buying form the scm)
 
 	parsing_done: boolean;
-	parsing_failed: boolean; //if item not found in schema, unknown effect/texture etc. (safe to use once fully_resolved is true)
+	parsing_failed: boolean; //if item not found in schema, unknown effect/texture etc. (safe to use once parsing_done is true)
+	fully_resolved: boolean; //true once all traits have a definitve value (parsing_done is true and remaining defaults have been set)
 
 	constructor(traits: ItemTraits) {
 		//@ts-ignore
@@ -93,6 +94,7 @@ export default class BaseItem implements ItemTraits {
 
 		this.parsing_done = true;
 		this.parsing_failed = false;
+		this.fully_resolved = false;
 	}
 
 	static async init(steam_api_key: string): Promise<void>;
@@ -129,7 +131,7 @@ export default class BaseItem implements ItemTraits {
 		return this.getAttribute("id") as string | undefined;
 	}
 	getType() {
-		return this.getAttribute("type") as ItemType | undefined;
+		return this.getAttribute("type") as ItemType;
 	}
 	isTradable() {
 		return this.getAttribute("tradable") as boolean;
@@ -333,11 +335,15 @@ export default class BaseItem implements ItemTraits {
 	}
 
 	protected setSchemaStats() {
-		if (this.getDefindex() == undefined) return;
+		const def_index = this.getDefindex();
+		if (def_index == undefined) return;
+		if (this.name !== undefined && this.needs_the !== undefined && this.type !== undefined) return false;
 
-		const schema_item = global_info.parsed_schema.find(o => o.def_index == this.getDefindex());
+		const schema_item = global_info.parsed_schema.find(o => o.def_index == def_index);
 		if (schema_item == undefined) {
-			this.name = "[Unknown: " + this.def_index;
+			this.name = "[Unknown: " + this.def_index + "]";
+			this.needs_the = false;
+			this.type = "unknown";
 			return;
 		}
 
@@ -392,11 +398,9 @@ export default class BaseItem implements ItemTraits {
 	 * Checks if the Item is a key, ref, rec or scrap.
 	 */
 	isCurrency() {
-		return (
-			this.getQuality() == 6 &&
-			(this.getDefindex() == 5021 || this.getDefindex() == 5002 || this.getDefindex() == 5001 || this.getDefindex() == 5000) &&
-			this.isCraftable()
-		);
+		if (this.getQuality() != 6 || !this.isCraftable()) return false;
+		const def_index = this.getDefindex();
+		return def_index == 5021 || def_index == 5002 || def_index == 5001 || def_index == 5000;
 	}
 
 	/**
@@ -466,21 +470,6 @@ export default class BaseItem implements ItemTraits {
 		return json;
 	}
 
-	/**
-	 * Does not support sheens/killstreakers, paint, spells, parts, uses. textures and recipes are untested. replace with toBPDocument
-	 */
-	/* toBPResolvable(): BPResolvable {
-		let q = String(this.getQuality());
-		if (this.isStrange() && this.getQuality() != 11) q = "Strange " + EItemQuality[this.getQuality()!];
-
-		return {
-			item: this.toBPName()!,
-			quality: q,
-			tradable: this.isTradable(),
-			craftable: this.isCraftable(),
-			priceindex: this.getBPPriceIndex(),
-		};
-	} */
 	/**
 	 * no recipes except unusualifiers and strangifiers
 	 */
@@ -582,7 +571,6 @@ export default class BaseItem implements ItemTraits {
 			this.getKillstreakSheen() != item.getKillstreakSheen() ||
 			this.getKillstreaker() != item.getKillstreaker() ||
 			this.getPaint() != item.getPaint() ||
-			this.getItemNumber() != item.getItemNumber() || //remove
 			this.isNeverTradable() != item.isNeverTradable()
 		) {
 			return false;
@@ -711,12 +699,17 @@ export default class BaseItem implements ItemTraits {
 	}
 
 	fullResolve() {
+		if (this.fully_resolved) return;
+
 		for (let key in default_traits) {
 			//@ts-ignore
 			if (this[key] === undefined) this[key] = default_traits[key];
 		}
+		this.setSchemaStats();
 
 		if (!this.parsing_failed) this.parsing_failed = false;
+		this.parsing_done = true;
+		this.fully_resolved = true;
 	}
 
 	static unknown_traits: ETraits[] = [];

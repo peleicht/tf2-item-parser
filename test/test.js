@@ -10,6 +10,13 @@ import bp_api_item_tests from "./bp_api_item_tests.js";
 import name_tests from "./name_tests.js";
 import sku_tests from "./sku_tests.js";
 
+/* v2:
+parse everything when one thing needed
+parsed schema as one hash table each for def_index and norm_item_name
+more consistent output_item (just ItemAttributes?)
+actually make attributes private
+*/
+
 /* const _input = "Strange Festivized Specialized Killstreak Flower Power Scattergun (Well-Worn)";
 
 const _item = Item.fromItemName(_input);

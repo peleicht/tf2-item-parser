@@ -94,4 +94,5 @@ export type ItemType =
 	| "map_token" //map stamps
 	| "bundle"
 	| "tool" //i.e. keys, paints
-	| "supply_crate";
+	| "supply_crate"
+	| "unknown"; //type if item wasnt found in schema
