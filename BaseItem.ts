@@ -224,7 +224,7 @@ export default class BaseItem implements ItemTraits {
 
 	protected identifyUses() {
 		const def_index = this.getDefindex();
-		if (!def_index) return;
+		if (def_index === undefined) return;
 
 		const name = this.getName();
 
@@ -387,8 +387,11 @@ export default class BaseItem implements ItemTraits {
 		}
 
 		if (!ignore_uses) {
-			if (this.isUsable() != item.isUsable()) return false;
-			if (this.isUsable() && this.getRemainingUses() != item.getRemainingUses()) return false;
+			const this_full_uses = !this.isUsable() || this.getRemainingUses() == this.getMaxUses();
+			const that_full_uses = !item.isUsable() || item.getRemainingUses() == item.getMaxUses();
+			if (this_full_uses != that_full_uses) {
+				if (this.getRemainingUses() != item.getRemainingUses()) return false;
+			}
 		}
 
 		return true;
