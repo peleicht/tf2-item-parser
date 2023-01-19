@@ -129,7 +129,7 @@ export default class TF2Item extends BaseItem {
 				this.id = parsed_item.assetid;
 				this.tradable = parsed_item.tradable;
 				if (!this.is_bp_api_item) this.craftable = parsed_item.craftable;
-				else this.craftable = Boolean(this.tf2_item!.flag_cannot_craft);
+				else this.craftable = !Boolean(this.tf2_item!.flag_cannot_craft);
 
 				if (parsed_item.killstreakTier) this.killstreak = parsed_item.killstreakTier;
 				if (parsed_item.sheen) {
