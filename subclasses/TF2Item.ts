@@ -130,6 +130,7 @@ export default class TF2Item extends BaseItem {
 					//".flags" attribute missing on bpapi items, so uncraftable get mistaken sometimes, fix here with the name
 					if (this.tf2_item!.name && !this.tf2_item!.name.includes("Non-Craftable")) this.craftable = true;
 				}
+				if (this.tf2_item!.flag_cannot_craft) this.craftable = false;
 
 				if (parsed_item.killstreakTier) this.killstreak = parsed_item.killstreakTier;
 				if (parsed_item.sheen) {

@@ -51,7 +51,7 @@ export interface TF2ItemType {
 	defindex?: number;
 	def_index?: number;
 	quality: number;
-	flag_cannot_craft: boolean;
+	flag_cannot_craft?: boolean;
 	quantity: number;
 	attribute?: TF2Attribute[];
 	attributes?: TF2Attribute[];

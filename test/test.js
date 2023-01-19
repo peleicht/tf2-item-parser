@@ -15,6 +15,9 @@ parse everything when one thing needed
 parsed schema as one hash table each for def_index and norm_item_name
 more consistent output_item (just ItemAttributes?)
 actually make attributes private
+test listing.item.flag_cannot_craft and missing craftable flags
+
+todo:
 */
 
 /* const _input = "Strange Festivized Specialized Killstreak Flower Power Scattergun (Well-Worn)";
@@ -35,7 +38,7 @@ let x; */
  * Usable items (max_uses, remaining_uses)
  * 'Special' Items: Crates, Cases, Unusualifiers, Killstreak Kit (Fabricators), Chemistry Sets, Strangifiers, War Paints, Gift-wrapped items, multiple def_indexes
  *
- * missing: medal, key uses
+ * missing: medals
  *
  * In practice: [
  * 	Strange Specialized Killstreak Australium Axtinguisher,
