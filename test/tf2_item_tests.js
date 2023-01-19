@@ -615,7 +615,7 @@ export default [
 			craftable: false,
 			killstreak: 2,
 			killstreak_sheen: 2,
-			tradable: false,
+			tradable: true,
 			target_def_index: 30667,
 		},
 	},
