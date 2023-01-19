@@ -126,6 +126,9 @@ export default class TF2Item extends BaseItem {
 				this.id = parsed_item.assetid;
 				this.tradable = parsed_item.tradable;
 				this.craftable = parsed_item.craftable;
+				if (!this.craftable) {
+					let x;
+				}
 				if (this.craftable === false && this.tf2_item!.name) {
 					//".flags" attribute missing on bpapi items, so uncraftable get mistaken sometimes, fix here with the name
 					if (this.tf2_item!.name && !this.tf2_item!.name.includes("Non-Craftable")) this.craftable = true;

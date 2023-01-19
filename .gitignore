@@ -2,3 +2,4 @@
 *.code*
 node_modules
 /dist
+data_jsons

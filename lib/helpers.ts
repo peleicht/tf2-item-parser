@@ -1,4 +1,6 @@
 import { writeFile, rename } from "fs";
+import { dirname } from "path";
+import { fileURLToPath } from "url";
 import SchemaManager from "tf2-schema";
 
 import importJSON from "../types/importJSON.js";
@@ -129,7 +131,7 @@ export function updateTextures(schema_textures: Enum): Enum {
  * @param data
  * @param target File Name before the .
  * @param fancy Makes the file more readable, but bigger. Default true.
- * @returns {Promise<Boolean>} success
+ * @returns success
  */
 export async function saveFile(data: string | any, target: string, fancy = true): Promise<boolean> {
 	if (!(data instanceof String)) {
@@ -137,8 +139,11 @@ export async function saveFile(data: string | any, target: string, fancy = true)
 		else data = JSON.stringify(data);
 	}
 
-	let path = "./data/" + target + ".json.temp";
-	if (target.startsWith("E")) path = path.replace("/data", "/enums");
+	const __dirname = dirname(fileURLToPath(import.meta.url));
+	const root_dirname = __dirname.slice(0, __dirname.length - 9);
+
+	const target_dir = target.startsWith("E") ? "/enums/" : "/data/";
+	const path = root_dirname + target_dir + target + ".json.temp";
 
 	return new Promise(res => {
 		writeFile(path, data, err => {
@@ -146,7 +151,7 @@ export async function saveFile(data: string | any, target: string, fancy = true)
 				console.log("Error writing File (" + path.substring(0, path.length - 5) + "): " + err);
 				res(false);
 			} else {
-				rename(path, path.substring(0, path.length - 5), () => {});
+				rename(path, path.substring(0, path.length - 5), () => {}); //rename is atomic operation, writing is not and can cause corruption if interrupted
 				res(true);
 			}
 		});

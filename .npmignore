@@ -4,5 +4,5 @@
 tsconfig.json
 prettierrc.json
 .vscode
-.code-workspace
+*.code-workspace
 test
