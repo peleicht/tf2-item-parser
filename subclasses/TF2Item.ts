@@ -29,12 +29,15 @@ export default class TF2Item extends BaseItem {
 	private tf2_item?: TF2ItemType;
 	private name_item?: NameItem;
 	private internal_parsing_done: boolean;
+	private is_bp_api_item: boolean;
 
 	constructor(tf2_item: TF2ItemType) {
 		super({});
+		this.is_bp_api_item = false;
 
 		//bp api delivers with defindex instead of def_index and differently formatted attributes
 		if (tf2_item.defindex !== undefined) {
+			this.is_bp_api_item = true;
 			tf2_item.def_index = tf2_item.defindex;
 			delete tf2_item.defindex;
 
@@ -125,15 +128,8 @@ export default class TF2Item extends BaseItem {
 
 				this.id = parsed_item.assetid;
 				this.tradable = parsed_item.tradable;
-				this.craftable = parsed_item.craftable;
-				if (!this.craftable) {
-					let x;
-				}
-				if (this.craftable === false && this.tf2_item!.name) {
-					//".flags" attribute missing on bpapi items, so uncraftable get mistaken sometimes, fix here with the name
-					if (this.tf2_item!.name && !this.tf2_item!.name.includes("Non-Craftable")) this.craftable = true;
-				}
-				if (this.tf2_item!.flag_cannot_craft) this.craftable = false;
+				if (!this.is_bp_api_item) this.craftable = parsed_item.craftable;
+				else this.craftable = Boolean(this.tf2_item!.flag_cannot_craft);
 
 				if (parsed_item.killstreakTier) this.killstreak = parsed_item.killstreakTier;
 				if (parsed_item.sheen) {

@@ -16,6 +16,7 @@ parsed schema as one hash table each for def_index and norm_item_name
 more consistent output_item (just ItemAttributes?)
 actually make attributes private
 test listing.item.flag_cannot_craft and missing craftable flags
+save schema (allow parsing tf2 items without init)
 
 todo:
 */
