@@ -63,7 +63,7 @@ export function parseSchema(schema: any): [ParsedSchema[], NumEnum] {
  */
 export function getPromos(mod_schema = parsed_schema): NumEnum {
 	const doubles: { [key: number]: number } = {
-		160: 294, //lugermorph (Vintage / Unique)
+		294: 160, //lugermorph (Vintage / Unique)
 	};
 
 	const found = [294];
