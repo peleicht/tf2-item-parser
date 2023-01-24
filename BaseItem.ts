@@ -14,12 +14,16 @@ import { BPDocumentTypeOutgoing, TradeOfferManagerItem } from "./types/foreign_i
 import ESpells from "./enums/ESpells.js";
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const ETextures = importJSON("/enums/ETextures.json") as Enum;
-const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema[];
+const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
+const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
+const parsed_schema_norm_names = importJSON("/data/parsed_schema_norm_names.json") as ParsedSchema;
 const promos = importJSON("/data/promos.json") as NumEnum;
 
 export const global_info = {
 	ready: false,
-	parsed_schema: parsed_schema,
+	parsed_schema,
+	parsed_schema_names,
+	parsed_schema_norm_names,
 	promos: promos,
 	tf2_item_parser: undefined as BackpackParser | undefined,
 	EUnusualEffects,
@@ -104,13 +108,15 @@ export default class BaseItem implements ItemTraits {
 		if (typeof init_value == "string") schema = await makeSchema(init_value);
 		else schema = init_value;
 
-		const [bschema, promos] = parseSchema(schema);
+		const [bschema, bschema_names, parsed_schema_norm_names, promos] = parseSchema(schema);
 		const unu = updateUnusuals(schema.raw.schema.attribute_controlled_attached_particles);
 		const tex = updateTextures(schema.raw.schema.paintkits);
 
 		global_info.EUnusualEffects = unu;
 		global_info.ETextures = tex;
 		global_info.parsed_schema = bschema;
+		global_info.parsed_schema_names = bschema_names;
+		global_info.parsed_schema_norm_names = parsed_schema_norm_names;
 		global_info.promos = promos;
 		global_info.tf2_item_parser = new BackpackParser(schema.raw.items_game);
 		global_info.ready = true;
@@ -339,7 +345,7 @@ export default class BaseItem implements ItemTraits {
 		if (def_index == undefined) return;
 		if (this.name !== undefined && this.needs_the !== undefined && this.type !== undefined) return false;
 
-		const schema_item = global_info.parsed_schema.find(o => o.def_index == def_index);
+		const schema_item = global_info.parsed_schema[def_index];
 		if (schema_item == undefined) {
 			this.name = "[Unknown: " + this.def_index + "]";
 			this.needs_the = false;
@@ -619,18 +625,18 @@ export default class BaseItem implements ItemTraits {
 		const out = this.getOutput();
 		if (out) {
 			if (out.quality && out.def_index) {
-				const out_item = global_info.parsed_schema.find(i => i.def_index == out.def_index); //cache name in output?
+				const out_item = global_info.parsed_schema[out.def_index]; //cache name in output?
 				final_name += out_item?.item_name;
 			} else {
 				if (out.item!.getDefindex() == 5726) {
-					const out_target_item = global_info.parsed_schema.find(i => i.def_index == out.item!.target_def_index!);
+					const out_target_item = global_info.parsed_schema[out.item!.target_def_index!];
 					const out_name = out_target_item?.item_name || ""; //can be unknown in tf2 items
 					final_name += out_name + " " + out.item!.getName(); //dont show ks or uncraftable in kit fabricator
 				} else final_name += out.item!.toString();
 			}
 		} else if (this.getTargetDefIndex()) {
 			const target_def_index = this.getTargetDefIndex();
-			const target_item = global_info.parsed_schema.find(i => i.def_index == target_def_index);
+			const target_item = global_info.parsed_schema[target_def_index!];
 			final_name += target_item?.item_name;
 		}
 		return final_name.trim();

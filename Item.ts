@@ -65,8 +65,8 @@ export default class Item extends BaseItem {
 	}
 }
 
-const { parsed_schema, promos, ETextures, EUnusualEffects } = global_info;
-export { parsed_schema, promos, ETextures, EUnusualEffects };
+const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
+export { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects };
 export * from "./types/foreign_items.js";
 export * from "./types/index.js";
 export function isReady() {

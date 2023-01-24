@@ -51,7 +51,7 @@ export default class BPDocumentItem extends BaseItem {
 			this.setSchemaStats();
 		} else {
 			this.name = item.baseName;
-			const schema_item = global_info.parsed_schema.find(it => it.item_name == this.name);
+			const schema_item = global_info.parsed_schema_names[this.name];
 			if (schema_item == undefined) this.parsing_failed = true;
 			else {
 				this.def_index = schema_item.def_index;

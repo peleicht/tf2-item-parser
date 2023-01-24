@@ -316,21 +316,14 @@ export default class NameItem extends BaseItem {
 
 	private getSchemaItemByName(name: string) {
 		if (!name) return undefined;
-		if (name == "key" || name == "keys") return getSchemaItemByDefindex(5021, global_info.parsed_schema);
-		if (name == "ref" || name == "refined") return getSchemaItemByDefindex(5002, global_info.parsed_schema);
-		if (name == "rec" || name == "reclaimed") return getSchemaItemByDefindex(5001, global_info.parsed_schema);
-		if (name == "scrap") return getSchemaItemByDefindex(5000, global_info.parsed_schema);
+		if (name == "key" || name == "keys") return global_info.parsed_schema[5021];
+		if (name == "ref" || name == "refined") return global_info.parsed_schema[5002];
+		if (name == "rec" || name == "reclaimed") return global_info.parsed_schema[5001];
+		if (name == "scrap") return global_info.parsed_schema[5000];
 
 		name = NameItem.replaceSpecialCharacters(name);
-		for (let schema_item of global_info.parsed_schema) {
-			if (schema_item.norm_item_name == name) return schema_item;
-		}
 
-		return undefined;
-
-		function getSchemaItemByDefindex(def_index: number, parsed_schema: ParsedSchema[]) {
-			return parsed_schema.find(o => o.def_index == def_index);
-		}
+		return global_info.parsed_schema_norm_names[name];
 	}
 
 	fullResolve() {

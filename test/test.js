@@ -1,5 +1,3 @@
-//import { deepStrictEqual } from "assert";
-import { parseEconItem, parseString, toSKU } from "tf2-item-format/static";
 import Item from "../dist/Item.js";
 import name_item_tests from "./name_item_tests.js";
 import econ_item_tests from "./econ_item_tests.js";
@@ -12,13 +10,13 @@ import sku_tests from "./sku_tests.js";
 
 /* v2:
 parse everything when one thing needed
-parsed schema as one hash table each for def_index and norm_item_name
 more consistent output_item (just ItemAttributes?)
 actually make attributes private
 test listing.item.flag_cannot_craft and missing craftable flags
 save schema (allow parsing tf2 items without init)
 
 todo:
+Could not resolve name: Natascha A Carefully Wrapped Gift
 */
 
 /* const _input = "Strange Festivized Specialized Killstreak Flower Power Scattergun (Well-Worn)";

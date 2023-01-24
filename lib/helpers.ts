@@ -7,7 +7,9 @@ import importJSON from "../types/importJSON.js";
 import { ParsedSchema, Enum, NumEnum } from "../types";
 import Item from "../BaseItem.js";
 
-const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema[];
+const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
+const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
+const parsed_schema_norm_names = importJSON("/data/parsed_schema_norm_names.json") as ParsedSchema;
 const promos = importJSON("/data/promos.json") as NumEnum;
 
 export async function makeSchema(steam_api_key: string) {
@@ -26,8 +28,9 @@ export async function makeSchema(steam_api_key: string) {
 /**
  * Normalizes the names in the Schema, writes them to item.norm_item_name. Updated promos, then restarts bot if anything changed.
  */
-export function parseSchema(schema: any): [ParsedSchema[], NumEnum] {
-	if (schema.raw.schema.items.length == parsed_schema.length) return [parsed_schema, promos];
+export function parseSchema(schema: any): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
+	if (schema.raw.schema.items.length == Object.keys(parsed_schema).length)
+		return [parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos];
 
 	const item_type_mapping: { [key: string]: string } = {
 		melee: "weapon",
@@ -41,44 +44,52 @@ export function parseSchema(schema: any): [ParsedSchema[], NumEnum] {
 		class_token: "craft_item",
 	};
 
-	const new_parsed_schema: ParsedSchema[] = [];
+	const new_parsed_schema: ParsedSchema = {};
+	const new_parsed_schema_names: ParsedSchema = {};
+	const new_parsed_schema_norm_names: ParsedSchema = {};
 
 	for (let item of schema.raw.schema.items) {
-		new_parsed_schema.push({
+		const parsed = {
 			def_index: item.defindex,
 			item_name: item.item_name.replace("\n", " "),
 			proper_name: item.proper_name,
 			type: item_type_mapping[item.item_slot] || item.item_slot || item.item_class,
 			norm_item_name: Item.normalizeName(item.item_name),
-		});
+		};
+		new_parsed_schema[parsed.def_index] = parsed;
+		if (!new_parsed_schema_names[parsed.item_name]) new_parsed_schema_names[parsed.item_name] = parsed;
+		if (!new_parsed_schema_norm_names[parsed.norm_item_name]) new_parsed_schema_norm_names[parsed.norm_item_name] = parsed;
 	}
 
 	const new_promos = getPromos(new_parsed_schema);
 	saveFile(new_promos, "promos");
 	saveFile(new_parsed_schema, "parsed_schema", false);
+	saveFile(new_parsed_schema_names, "parsed_schema_names", false);
+	saveFile(new_parsed_schema_norm_names, "parsed_schema_norm_names", false);
 
-	return [new_parsed_schema, new_promos];
+	return [new_parsed_schema, parsed_schema_names, new_parsed_schema_norm_names, new_promos];
 }
 
 /**
  * Gets all Promo/Strange/Decorated Items that have multiple different def_index. Use via promos[def_index] || def_index. Watch out for bat promo :)
  */
-export function getPromos(mod_schema = parsed_schema): NumEnum {
+export function getPromos(mod_schema: ParsedSchema): NumEnum {
 	const doubles: { [key: number]: number } = {
 		294: 160, //lugermorph (Vintage / Unique)
 	};
 
 	const found = [294];
 
-	for (let i = 0; i < mod_schema.length; i++) {
-		const item0 = mod_schema[i];
+	const def_indexes = Object.keys(mod_schema);
+	for (let i = 0; i < def_indexes.length; i++) {
+		const item0 = mod_schema[def_indexes[i]];
 
 		if (ignore(item0.def_index, item0.norm_item_name)) continue;
 
 		const promo_name = "promo " + item0.norm_item_name;
 		const upgradeable_name = "upgradeable " + item0.norm_item_name;
-		for (let j = i + 1; j < mod_schema.length; j++) {
-			const item1 = mod_schema[j];
+		for (let j = i + 1; j < def_indexes.length; j++) {
+			const item1 = mod_schema[def_indexes[j]];
 			if (ignore(item1.def_index, item1.norm_item_name)) continue;
 
 			if (item0.norm_item_name == item1.norm_item_name || promo_name == item1.norm_item_name || upgradeable_name == item1.norm_item_name) {
