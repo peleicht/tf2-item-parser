@@ -20,7 +20,7 @@ const trait_maps = {
 	wear_ids: [] as number[],
 };
 
-export default function parseNameItem(name: string, strict = false): ItemTraits | undefined {
+export default function parseName(name: string, strict = false): ItemTraits | undefined {
 	let cut_name = normalizeName(name);
 
 	const traits: ItemTraits = {};

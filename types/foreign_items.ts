@@ -1,4 +1,4 @@
-import { ItemAttributes, AddionalEconItemAttributes } from "tf2-item-format/.";
+import { ItemAttributes } from "tf2-item-format/.";
 import { ParsedEconItem } from "tf2-item-format/dist/types/index.js";
 
 export type EconItemType = {
@@ -99,7 +99,7 @@ export interface BPDocumentType {
 	texture: BPDocumentEntity;
 	wearTier: BPDocumentEntity;
 	elevatedQuality: BPDocumentEntity;
-	spells: BPDocumentEntity[]; //?
+	spells: BPDocumentEntity[];
 	strangeParts?: {
 		score: number;
 		killEater: {

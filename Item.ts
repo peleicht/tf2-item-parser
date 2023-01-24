@@ -18,7 +18,7 @@ import {
 	TradeOfferManagerItem,
 } from "./types/foreign_items.js";
 import ESpells from "./enums/ESpells.js";
-import parseNameItem from "./parsers/NameItem.js";
+import parseName from "./parsers/NameItem.js";
 import parseSKU from "./parsers/SKUItem.js";
 import parseEconItem from "./parsers/EconItem.js";
 import parseTF2Item from "./parsers/TF2Item.js";
@@ -187,7 +187,7 @@ export default class Item implements ItemTraits {
 	static FESTIVIZER = new Item({ def_index: 5839, quality: 6, craftable: false, name: "Festivizer" });
 
 	static fromName(name: string, strict = false): Item | undefined {
-		return Item.makeItem(name, parseSKU, strict);
+		return Item.makeItem(name, parseName, strict);
 	}
 
 	static fromSKU(sku: string): Item | undefined {
