@@ -188,56 +188,56 @@ export default class Item implements ItemTraits {
 
 	static fromName(name: string, strict = false): Item | undefined {
 		const traits = parseNameItem(name, strict);
-		if (!traits) return;
-		return new Item(traits);
+		if (traits) {
+			try {
+				return new Item(traits);
+			} catch {}
+		}
 	}
 
 	static fromSKU(sku: string): Item | undefined {
-		const traits = parseSKU(sku);
-		if (!traits) return;
-		return new Item(traits);
+		return Item.makeBPItem(sku, parseSKU);
 	}
 
 	/**
 	 * For items from the steam api, node-steam-user and node-steamcommunity
 	 */
 	static fromEconItem(item: EconItemType): Item | undefined {
-		const traits = parseEconItem(item);
-		if (!traits) return;
-		return new Item(traits);
+		return Item.makeBPItem(item, parseEconItem);
 	}
 
 	/**
 	 * For the tf2 node module and some older bp api endpoints.
 	 */
 	static fromTF2(item: TF2ItemType): Item | undefined {
-		const traits = parseTF2Item(item);
-		if (!traits) return;
-		return new Item(traits);
+		return Item.makeBPItem(item, parseTF2Item);
 	}
 
 	/**
 	 * For conversion from the tf2-item-format node module.
 	 */
 	static fromItemFormat(item: AllFormatAttributes): Item | undefined {
-		const traits = parseItemFormatItem(item);
-		if (!traits) return;
-		return new Item(traits);
+		return Item.makeBPItem(item, parseItemFormatItem);
 	}
 
 	/**
 	 * For the newer bp api endpoints.
 	 */
 	static fromBPDocument(item: BPDocumentType): Item | undefined {
-		const traits = parseBPDocument(item);
-		if (!traits) return undefined;
-		else return new Item(traits);
+		return Item.makeBPItem(item, parseBPDocument);
 	}
 
 	static fromBPURL(url: string): Item | undefined {
-		const traits = parseBPURLItem(url);
-		if (!traits) return undefined;
-		else return new Item(traits);
+		return Item.makeBPItem(url, parseBPURLItem);
+	}
+
+	private static makeBPItem(input: any, parser: (input: any) => ItemTraits | undefined) {
+		const traits = parser(input);
+		if (traits) {
+			try {
+				return new Item(traits);
+			} catch {}
+		}
 	}
 
 	static fromJSON(json: ItemTraits): Item {
