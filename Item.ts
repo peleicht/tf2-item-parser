@@ -180,59 +180,54 @@ export default class Item implements ItemTraits {
 		if (typeof init_value == "string") setTimeout(() => this.init(init_value), 1 * 60 * 60 * 1000);
 	}
 
-	static KEY: Item = new Item({ def_index: 5021, quality: 6, name: "Mann Co. Supply Crate Key" });
-	static REFINED: Item = new Item({ def_index: 5002, quality: 6, name: "Refined Metal" });
-	static RECLAIMED: Item = new Item({ def_index: 5001, quality: 6, name: "Reclaimed Metal" });
-	static SCRAP: Item = new Item({ def_index: 5000, quality: 6, name: "Scrap Metal" });
-	static FESTIVIZER: Item = new Item({ def_index: 5839, quality: 6, craftable: false, name: "Festivizer" });
+	static KEY = new Item({ def_index: 5021, quality: 6, name: "Mann Co. Supply Crate Key" });
+	static REFINED = new Item({ def_index: 5002, quality: 6, name: "Refined Metal" });
+	static RECLAIMED = new Item({ def_index: 5001, quality: 6, name: "Reclaimed Metal" });
+	static SCRAP = new Item({ def_index: 5000, quality: 6, name: "Scrap Metal" });
+	static FESTIVIZER = new Item({ def_index: 5839, quality: 6, craftable: false, name: "Festivizer" });
 
 	static fromName(name: string, strict = false): Item | undefined {
-		const traits = parseNameItem(name, strict);
-		if (traits) {
-			try {
-				return new Item(traits);
-			} catch {}
-		}
+		return Item.makeItem(name, parseSKU, strict);
 	}
 
 	static fromSKU(sku: string): Item | undefined {
-		return Item.makeBPItem(sku, parseSKU);
+		return Item.makeItem(sku, parseSKU);
 	}
 
 	/**
 	 * For items from the steam api, node-steam-user and node-steamcommunity
 	 */
 	static fromEconItem(item: EconItemType): Item | undefined {
-		return Item.makeBPItem(item, parseEconItem);
+		return Item.makeItem(item, parseEconItem);
 	}
 
 	/**
 	 * For the tf2 node module and some older bp api endpoints.
 	 */
 	static fromTF2(item: TF2ItemType): Item | undefined {
-		return Item.makeBPItem(item, parseTF2Item);
+		return Item.makeItem(item, parseTF2Item);
 	}
 
 	/**
 	 * For conversion from the tf2-item-format node module.
 	 */
 	static fromItemFormat(item: AllFormatAttributes): Item | undefined {
-		return Item.makeBPItem(item, parseItemFormatItem);
+		return Item.makeItem(item, parseItemFormatItem);
 	}
 
 	/**
 	 * For the newer bp api endpoints.
 	 */
 	static fromBPDocument(item: BPDocumentType): Item | undefined {
-		return Item.makeBPItem(item, parseBPDocument);
+		return Item.makeItem(item, parseBPDocument);
 	}
 
 	static fromBPURL(url: string): Item | undefined {
-		return Item.makeBPItem(url, parseBPURLItem);
+		return Item.makeItem(url, parseBPURLItem);
 	}
 
-	private static makeBPItem(input: any, parser: (input: any) => ItemTraits | undefined) {
-		const traits = parser(input);
+	protected static makeItem(input: any, parser: (...input: any) => ItemTraits | undefined, ...args: any[]) {
+		const traits = parser(input, ...args);
 		if (traits) {
 			try {
 				return new Item(traits);
