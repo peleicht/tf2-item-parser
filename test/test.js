@@ -8,69 +8,21 @@ import bp_api_item_tests from "./bp_api_item_tests.js";
 import name_tests from "./name_tests.js";
 import sku_tests from "./sku_tests.js";
 
-/* v2:
-parse everything when one thing needed
+/* todo:
 more consistent output_item (just ItemAttributes?)
-actually make attributes private
-test listing.item.flag_cannot_craft and missing craftable flags
 save schema (allow parsing tf2 items without init)
-
-todo:
-Could not resolve name: Natascha A Carefully Wrapped Gift
 */
-
-/* const _input = "Strange Festivized Specialized Killstreak Flower Power Scattergun (Well-Worn)";
-
-const _item = Item.fromItemName(_input);
-const _item_name = _item.toString();
-const _item_def_index = _item.getDefindex();
-const _format_item = parseString(_input, true, true);
-const _sku = _item.toSKU();
-const _itt = Item.fromSKU(_sku);
-const _sku_name = _itt.toString();
-let x; */
-
-/**
- * Cases that need to be handled:
- * Basic attributes (craftable, killstreak, australium, festivized, elevated strange, tradable)
- * Numberic attributs (unusual, texture, paint, spells)
- * Usable items (max_uses, remaining_uses)
- * 'Special' Items: Crates, Cases, Unusualifiers, Killstreak Kit (Fabricators), Chemistry Sets, Strangifiers, War Paints, Gift-wrapped items, multiple def_indexes
- *
- * missing: medals
- *
- * In practice: [
- * 	Strange Specialized Killstreak Australium Axtinguisher,
- * 	Strange Festivized Specialized Killstreak Flower Power Scattergun (Well-Worn),
- * 	Noise Maker - Gremlin,
- * 	Non-Tradable Bonk Boy,
- * 	Skill Gotten Gains Taunt: The Skating Scorcher,
- * 	Non-Craftable Unusual Taunt: Yeti Punch Unusualifier,
- * 	Foppish Physician Strangifier Chemistry Set Series #2,
- * 	Third Degree Strangifier,
- * 	The Patriot Peak (painted),
- * 	The Sandman (spelled),
- * 	Nice Winter Crate 2014 #89,
- * 	'Decorated War Hero' War Paint Mercenary Grade Keyless Case #113,
- * 	Night Owl Mk.II War Paint (Factory New),
- * 	A Carefully Wrapped Gift,
- * 	Non-Craftable Killstreak Enforcer Kit,
- * 	Specialized Killstreak Mantreads Kit Fabricator
- * ]
- *
- * todo:
- */
 
 doTests();
 async function doTests() {
 	await Item.init("2DFB813179B47E85D649D24B59E4CDBC");
-	console.log("Initilization of Item Class successfull.");
+	console.log("Initilization of Item Class successfull.\n");
 
 	let successes = 0;
 	let total = 0;
 
 	console.log("Item.fromName()");
-	test(name_item_tests, Item.fromItemName, "input");
+	test(name_item_tests, Item.fromName, "input");
 
 	console.log("Item.fromEconItem()");
 	test(econ_item_tests, Item.fromEconItem);
@@ -95,7 +47,7 @@ async function doTests() {
 	console.log("\nSucceeded with " + successes + "/" + total + " tests.");
 
 	function test(tests, func, title = "title", input_parse = "func", output_parse = "json") {
-		let stop_at = 13;
+		let stop_at = 5;
 		let i = 0;
 
 		for (let test of tests) {
@@ -103,15 +55,15 @@ async function doTests() {
 			const test_title = test[title];
 
 			try {
+				if (stop_at <= i) {
+					let x;
+				}
+
 				const input = parseItem(test.input, input_parse);
 				const output = parseItem(test.expected_output, output_parse);
 				if (typeof input == "object") success = input.equalExact(output);
 				else success = input == output;
-
-				if (!success || stop_at <= i) {
-					let n = input.toString();
-					let x;
-				}
+				let x;
 			} catch (err) {
 				console.log("Error during " + test_title + ": " + err);
 				if (err.stack) console.log(err.stack);

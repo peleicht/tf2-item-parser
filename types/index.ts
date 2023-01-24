@@ -1,4 +1,4 @@
-import BaseItem from "../BaseItem.js";
+import Item from "../Item.js";
 
 export interface Enum {
 	[key: string]: number | string;
@@ -39,7 +39,7 @@ export interface ItemTraits {
 		//item resulting from the use of this item, either def_index and quality or item is defined
 		def_index?: number; //strangifier: output def_index and quality 11
 		quality?: number;
-		item?: BaseItem; //collectors chemistry set: collectors item, strangifier chemistry set and kit fabricator: strangifier/kit with target_def_index
+		item?: Item; //collectors chemistry set: collectors item, strangifier chemistry set and kit fabricator: strangifier/kit with target_def_index
 	};
 
 	type?: ItemType;

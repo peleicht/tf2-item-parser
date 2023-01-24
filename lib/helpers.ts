@@ -5,7 +5,7 @@ import SchemaManager from "tf2-schema";
 
 import importJSON from "../types/importJSON.js";
 import { ParsedSchema, Enum, NumEnum } from "../types";
-import Item from "../BaseItem.js";
+import Item, { normalizeName } from "../Item.js";
 
 const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
 const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
@@ -54,7 +54,7 @@ export function parseSchema(schema: any): [ParsedSchema, ParsedSchema, ParsedSch
 			item_name: item.item_name.replace("\n", " "),
 			proper_name: item.proper_name,
 			type: item_type_mapping[item.item_slot] || item.item_slot || item.item_class,
-			norm_item_name: Item.normalizeName(item.item_name),
+			norm_item_name: normalizeName(item.item_name),
 		};
 		new_parsed_schema[parsed.def_index] = parsed;
 		if (!new_parsed_schema_names[parsed.item_name]) new_parsed_schema_names[parsed.item_name] = parsed;

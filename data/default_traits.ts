@@ -20,4 +20,4 @@ export default {
 	usable: false,
 
 	never_tradable: false,
-} as ItemTraits;
+};
