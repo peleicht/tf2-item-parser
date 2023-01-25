@@ -237,7 +237,7 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 			}
 
 			//tradable
-			if (traits.tradable === undefined && descs[0].value.startsWith("\nTradable After: ")) {
+			if (descs[0].value.startsWith("\nTradable After: ")) {
 				descs.shift();
 				traits.tradable = false;
 				traits.never_tradable = false;
