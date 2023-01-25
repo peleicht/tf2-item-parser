@@ -34,6 +34,7 @@ export type EconItemType = {
 type EconAction = { link: string; name: string };
 type EconDescription = {
 	value: string;
+	type?: string; //"usertext" for custom names/descriptions
 	color?: string;
 	app_data?: { def_index: number };
 };

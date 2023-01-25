@@ -38,6 +38,9 @@ const from_name_traits: ETraits[] = [
 export default function parseEconItem(econ_item: EconItemType): ItemTraits | undefined {
 	const traits: ItemTraits = {};
 
+	traits.id = econ_item.assetid;
+	traits.tradable = Boolean(econ_item.tradable);
+
 	const name_item = Item.fromName(econ_item.market_name || econ_item.name, true);
 	if (!name_item) return;
 
@@ -59,7 +62,7 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 			let start_length = descs.length;
 
 			//empty or random extra info
-			if (descs[0].value.startsWith(" ")) {
+			if (descs[0].value.startsWith(" ") || descs[0].type == "usertext") {
 				descs.shift();
 				if (inside_block) inside_block = undefined;
 
@@ -223,11 +226,9 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 			//craftable
 			if (traits.craftable === undefined && descs[0].value.startsWith("( Not ")) {
 				const desc = descs.shift()!;
-				let found_not_tradable = false;
 				if (desc.value.includes("Tradable")) {
 					traits.tradable = false;
 					traits.never_tradable = true;
-					found_not_tradable = true;
 				}
 				if (desc.value.includes("Crafting")) {
 					traits.craftable = false;
@@ -246,6 +247,8 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 			if (start_length == descs.length) descs.shift(); //unknown description
 		}
 	}
+
+	if (traits.never_tradable === undefined) traits.never_tradable = !traits.tradable;
 
 	const kills_part = traits.strange_parts?.indexOf(87);
 	if (kills_part !== undefined && kills_part != -1 && traits.def_index !== undefined) {
