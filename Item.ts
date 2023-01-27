@@ -370,7 +370,7 @@ export default class Item implements ItemTraits {
 		let url = "https://backpack.tf/stats/" + EItemQuality[this.quality!] + "/" + this.toBPName();
 		const t = this.tradable ? "/Tradable" : "/Non-Tradable";
 		const c = this.craftable ? "/Craftable" : "/Non-Craftable";
-		url += t + c + "/" + this.getBPPriceIndex();
+		url += t + c + "/" + (this.getBPPriceIndex() || "");
 
 		return encodeURI(url);
 	}
