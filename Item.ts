@@ -97,7 +97,7 @@ export default class Item implements ItemTraits {
 	constructor(traits: ItemTraits) {
 		const def_index = Item.correctDefIndex(traits.def_index);
 		if (def_index !== undefined) this.def_index = def_index;
-		else this.def_index = -1;
+		else this.def_index = -2;
 		this.quality = traits.quality !== undefined ? traits.quality : default_traits.quality;
 		this.name = traits.name || "";
 		//@ts-ignore
@@ -106,14 +106,17 @@ export default class Item implements ItemTraits {
 		this.needs_the = traits.needs_the;
 		if (this.def_index == undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
 			let schema_item;
-			if (this.def_index != -1) schema_item = Item.getSchemaItem(this.def_index);
+			if (this.def_index != -2) schema_item = Item.getSchemaItem(this.def_index);
 			else if (this.name != "") schema_item = Item.getSchemaItem(undefined, this.name);
 			else throw "Bad Item!";
-			if (!schema_item) throw "Bad Item!";
-			if (this.def_index == -1) this.def_index = schema_item.def_index;
-			if (this.name == "") this.name = schema_item.item_name;
-			this.type = schema_item.type;
-			this.needs_the = schema_item.proper_name;
+			if (!schema_item) {
+				if (this.def_index != -1) throw "Bad Item!"; //dont throw if explicitly wildcard
+			} else {
+				if (this.def_index == -1) this.def_index = schema_item.def_index;
+				if (this.name == "") this.name = schema_item.item_name;
+				this.type = schema_item.type;
+				this.needs_the = schema_item.proper_name;
+			}
 		}
 
 		this.id = traits.id;
@@ -185,6 +188,7 @@ export default class Item implements ItemTraits {
 	static RECLAIMED = new Item({ def_index: 5001, quality: 6, name: "Reclaimed Metal" });
 	static SCRAP = new Item({ def_index: 5000, quality: 6, name: "Scrap Metal" });
 	static FESTIVIZER = new Item({ def_index: 5839, quality: 6, craftable: false, name: "Festivizer" });
+	static WILDCARD = new Item({ def_index: -1, name: "Wildcard" });
 
 	static fromName(name: string, strict = false): Item | undefined {
 		return Item.makeItem(name, parseName, strict);
@@ -249,6 +253,8 @@ export default class Item implements ItemTraits {
 	 * @param ignore_uses set to true to ignore remainig uses attribute. Default false.
 	 */
 	equal(item: Item, ignore_festivized: boolean = false, ignore_uses: boolean = false): boolean {
+		if (item.def_index == -1) return false;
+
 		if (
 			this.def_index != item.def_index ||
 			this.quality != item.quality ||
