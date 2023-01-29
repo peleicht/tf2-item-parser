@@ -32,7 +32,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 	//bp api delivers with defindex instead of def_index and differently formatted attributes
 	if (tf2_item.defindex !== undefined) {
 		is_bp_api_item = true;
-		tf2_item.def_index = (tf2_item.defindex);
+		tf2_item.def_index = tf2_item.defindex;
 		delete tf2_item.defindex;
 
 		if (tf2_item.name) {
@@ -75,6 +75,12 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		}
 		delete tf2_item.defindex;
 		delete tf2_item.attributes;
+	}
+
+	//sometimes types returned by bp will be wrong
+	tf2_item.quantity = Number(tf2_item.quantity);
+	for (let a of tf2_item.attribute!) {
+		a.def_index = Number(a.def_index);
 	}
 
 	if (!global_info.tf2_item_parser) throw "Cannot parse TF2 item before init!";
