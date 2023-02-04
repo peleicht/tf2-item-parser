@@ -555,10 +555,9 @@ export default class Item implements ItemTraits {
 
 		if (usables.includes(def_index)) {
 			usable = true;
-			max_uses = usables_uses[def_index];
+			max_uses = usables_uses[def_index]!;
 		} else if (type == "supply_crate" && name.includes("Case")) {
 			usable = true;
-			max_uses = 1;
 		} else if (name.includes("Noise Maker") && ![536, 673, 2006].includes(def_index)) {
 			usable = true;
 			max_uses = 25;
