@@ -4,8 +4,8 @@ import { fileURLToPath } from "url";
 import SchemaManager from "tf2-schema";
 
 import importJSON from "../types/importJSON.js";
-import { ParsedSchema, Enum, NumEnum } from "../types";
-import Item, { normalizeName } from "../Item.js";
+import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
+import { normalizeName, TF2Schema } from "../Item.js";
 
 const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
 const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
@@ -13,13 +13,13 @@ const parsed_schema_norm_names = importJSON("/data/parsed_schema_norm_names.json
 const promos = importJSON("/data/promos.json") as NumEnum;
 
 export async function makeSchema(steam_api_key: string) {
-	return new Promise((res, rej) => {
+	return new Promise<TF2Schema>((res, rej) => {
 		const schemaManager = new SchemaManager({ apiKey: steam_api_key, updateTime: -1 });
 		schemaManager.init(async (err: any) => {
 			if (err) {
 				rej("SchemaManager init failed: " + err);
 			} else {
-				res(schemaManager.schema);
+				res(schemaManager.schema as TF2Schema);
 			}
 		});
 	});
@@ -28,7 +28,7 @@ export async function makeSchema(steam_api_key: string) {
 /**
  * Normalizes the names in the Schema, writes them to item.norm_item_name. Updated promos, then restarts bot if anything changed.
  */
-export function parseSchema(schema: any): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
+export function parseSchema(schema: TF2Schema): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
 	if (schema.raw.schema.items.length == Object.keys(parsed_schema).length)
 		return [parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos];
 
@@ -53,7 +53,7 @@ export function parseSchema(schema: any): [ParsedSchema, ParsedSchema, ParsedSch
 			def_index: item.defindex,
 			item_name: item.item_name.replace("\n", " "),
 			proper_name: item.proper_name,
-			type: item_type_mapping[item.item_slot] || item.item_slot || item.item_class,
+			type: (item_type_mapping[item.item_slot] || item.item_slot || item.item_class) as ItemType,
 			norm_item_name: normalizeName(item.item_name),
 		};
 		new_parsed_schema[parsed.def_index] = parsed;

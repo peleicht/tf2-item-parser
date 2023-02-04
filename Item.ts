@@ -15,6 +15,7 @@ import {
 	BPDocumentTypeOutgoing,
 	EconItemType,
 	TF2ItemType,
+	TF2Schema,
 	TradeOfferManagerItem,
 } from "./types/foreign_items.js";
 import ESpells from "./enums/ESpells.js";
@@ -41,6 +42,7 @@ export const global_info = {
 	tf2_item_parser: undefined as BackpackParser | undefined,
 	EUnusualEffects: _EUnusualEffects,
 	ETextures: _ETextures,
+	schema: undefined as TF2Schema | undefined,
 };
 
 const usables_uses: NumEnum = {
@@ -161,9 +163,9 @@ export default class Item implements ItemTraits {
 	}
 
 	static async init(steam_api_key: string): Promise<void>;
-	static init(schema: any): void;
-	static async init(init_value: string | any) {
-		let schema: any;
+	static init(schema: TF2Schema): void;
+	static async init(init_value: string | TF2Schema) {
+		let schema: TF2Schema;
 		if (typeof init_value == "string") schema = await makeSchema(init_value);
 		else schema = init_value;
 
@@ -178,6 +180,7 @@ export default class Item implements ItemTraits {
 		global_info.parsed_schema_norm_names = bschema_norm_names;
 		global_info.promos = npromos;
 		global_info.tf2_item_parser = new BackpackParser(schema.raw.items_game);
+		global_info.schema = schema;
 		global_info.ready = true;
 
 		if (typeof init_value == "string") setTimeout(() => this.init(init_value), 1 * 60 * 60 * 1000);
