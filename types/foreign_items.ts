@@ -219,38 +219,8 @@ export interface TF2Schema {
 				id: number;
 				name: string;
 			}[];
-			attributes: {
-				name: string;
-				defindex: number;
-				attribute_class: string;
-				description_string: string;
-				description_format: string;
-				effect_type: string;
-				hidden: boolean;
-				stored_as_integer: boolean;
-			};
-			items: {
-				capabilities: {
-					[key: string]: true;
-				};
-				name: string; //"TF_WEAPON_BAT"
-				defindex: number;
-				item_class: string; //"tf_weapon_bat"
-				item_type_name: string; //"Bat"
-				item_name: string; //"Bat", actual base name
-				proper_name: false;
-				item_slot: string; //"melee",
-				model_player: string;
-				item_quality: number;
-				image_inventory: string;
-				min_ilevel: number;
-				max_ilevel: number;
-				image_url: string;
-				image_url_large: string;
-				craft_class: string; //"weapon"
-				craft_material_type: string; //"weapon"
-				used_by_classes: string[];
-			}[];
+			attributes: SchemaAttribute[];
+			items: ProperSchemaItem[];
 			items_game_url: string;
 			kill_eater_score_types: {
 				type: number; //id
@@ -266,4 +236,45 @@ export interface TF2Schema {
 	};
 	time: number; //timestamp
 	version: string;
+	getAttributeByDefindex: (def_index: number) => SchemaAttribute;
+	getEffectById: (id: number) => string;
+	getEffectidByName: (name: string) => number;
+	getItemByDefindex: (def_index: number) => ProperSchemaItem;
+	getItemByItemName: (name: string) => ProperSchemaItem;
+	getQualityById: (id: number) => string;
+	getQualityIdByName: (name: string) => number;
+	getSkinById: (id: number) => string;
+	getSkinIdByName: (name: string) => number;
+}
+interface SchemaAttribute {
+	name: string;
+	defindex: number;
+	attribute_class: string;
+	description_string: string;
+	description_format: string;
+	effect_type: string;
+	hidden: boolean;
+	stored_as_integer: boolean;
+}
+interface ProperSchemaItem {
+	capabilities: {
+		[key: string]: true;
+	};
+	name: string; //"TF_WEAPON_BAT"
+	defindex: number;
+	item_class: string; //"tf_weapon_bat"
+	item_type_name: string; //"Bat"
+	item_name: string; //"Bat", actual base name
+	proper_name: false;
+	item_slot: string; //"melee",
+	model_player: string;
+	item_quality: number;
+	image_inventory: string;
+	min_ilevel: number;
+	max_ilevel: number;
+	image_url: string;
+	image_url_large: string;
+	craft_class: string; //"weapon"
+	craft_material_type: string; //"weapon"
+	used_by_classes: string[];
 }
