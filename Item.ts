@@ -7,6 +7,10 @@ import default_traits from "./data/default_traits.js";
 import EItemKillstreak from "./enums/EItemKillstreak.js";
 import EItemQuality from "./enums/EItemQuality.js";
 import EItemWear from "./enums/EItemWear.js";
+import EKillstreaker from "./enums/EKillstreaker.js";
+import EKillstreakSheen from "./enums/EKillstreakSheen.js";
+import ESpells from "./enums/ESpells.js";
+import ETraits from "./enums/ETraits.js";
 
 import importJSON from "./types/importJSON.js";
 import {
@@ -18,7 +22,6 @@ import {
 	TF2Schema,
 	TradeOfferManagerItem,
 } from "./types/foreign_items.js";
-import ESpells from "./enums/ESpells.js";
 import parseName from "./parsers/NameItem.js";
 import parseSKU from "./parsers/SKUItem.js";
 import parseEconItem from "./parsers/EconItem.js";
@@ -26,7 +29,6 @@ import parseTF2Item from "./parsers/TF2Item.js";
 import parseBPDocument from "./parsers/BPDocument.js";
 import parseBPURLItem from "./parsers/BPURLItem.js";
 import parseItemFormatItem from "./parsers/ItemFormatItem.js";
-import ETraits from "./enums/ETraits.js";
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const _ETextures = importJSON("/enums/ETextures.json") as Enum;
 const _parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
@@ -696,6 +698,7 @@ export function replaceSpecialCharacters(text: string) {
 
 const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
 export { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects };
+export { EItemKillstreak, EItemQuality, EItemWear, EKillstreaker, EKillstreakSheen, ESpells, ETraits };
 export * from "./types/foreign_items.js";
 export * from "./types/index.js";
 export function isReady() {
