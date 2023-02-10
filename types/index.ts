@@ -80,13 +80,14 @@ export const item_traits = [
 ];
 
 export interface ParsedSchema {
-	[key: string]: {
-		def_index: number;
-		item_name: string;
-		proper_name: boolean;
-		type: ItemType;
-		norm_item_name: string;
-	};
+	[key: string]: ParsedSchemaEntry;
+}
+export interface ParsedSchemaEntry {
+	def_index: number;
+	item_name: string;
+	proper_name: boolean;
+	type: ItemType;
+	norm_item_name: string;
 }
 
 export type ItemType =

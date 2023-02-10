@@ -1,6 +1,6 @@
 import { BackpackParser } from "tf2-backpack";
 
-import { Enum, ItemTraits, ItemType, item_traits, NumEnum, ParsedSchema } from "./types/index.js";
+import { Enum, ItemTraits, ItemType, item_traits, NumEnum, ParsedSchema, ParsedSchemaEntry } from "./types/index.js";
 import { makeSchema, parseSchema, updateTextures, updateUnusuals } from "./lib/helpers.js";
 import default_traits from "./data/default_traits.js";
 
@@ -97,6 +97,9 @@ export default class Item implements ItemTraits {
 	needs_the: boolean;
 	never_tradable: boolean; //some items are untradable now, but may become tradable later (i.e. after buying form the scm)
 
+	/**
+	 * Create a new Item Instance with known item traits. Will throw an error when specifing an unknown defindex.
+	 */
 	constructor(traits: ItemTraits) {
 		const def_index = Item.correctDefIndex(traits.def_index);
 		if (def_index !== undefined) this.def_index = def_index;
@@ -466,29 +469,36 @@ export default class Item implements ItemTraits {
 		return { assetid: this.id, appid: 440, contextid: 2 };
 	}
 
-	equalExact(item: Item) {
-		if (!this.equal(item)) return false;
+	/**
+	 * Compare all item traits, even those one would rarely check like killstreak sheen, paints and strange parts. Recommend using .equal instead.
+	 */
+	equalExact(item: Item, ignore_traits: ETraits[] = []) {
+		if (!this.equal(item, ignore_traits)) return false;
 		if (
-			this.killstreak_sheen != item.killstreak_sheen ||
-			this.killstreaker != item.killstreaker ||
-			this.paint != item.paint ||
-			this.never_tradable != item.never_tradable
+			(this.killstreak_sheen != item.killstreak_sheen && !ignore_traits.includes(ETraits.killstreak_sheen)) ||
+			(this.killstreaker != item.killstreaker && !ignore_traits.includes(ETraits.killstreaker)) ||
+			(this.paint != item.paint && !ignore_traits.includes(ETraits.paint)) ||
+			(this.never_tradable != item.never_tradable && !ignore_traits.includes(ETraits.never_tradable))
 		) {
 			return false;
 		}
 
-		const this_parts = this.strange_parts;
-		const that_parts = item.strange_parts;
-		if (this_parts.length != that_parts.length) return false;
-		for (let part of this_parts) {
-			if (!that_parts.includes(part)) return false;
+		if (!ignore_traits.includes(ETraits.strange_parts)) {
+			const this_parts = this.strange_parts;
+			const that_parts = item.strange_parts;
+			if (this_parts.length != that_parts.length) return false;
+			for (let part of this_parts) {
+				if (!that_parts.includes(part)) return false;
+			}
 		}
 
-		const this_spells = this.spells;
-		const that_spells = item.spells;
-		if (this_spells.length != that_spells.length) return false;
-		for (let spell of this_spells) {
-			if (!that_spells.includes(spell)) return false;
+		if (!ignore_traits.includes(ETraits.spells)) {
+			const this_spells = this.spells;
+			const that_spells = item.spells;
+			if (this_spells.length != that_spells.length) return false;
+			for (let spell of this_spells) {
+				if (!that_spells.includes(spell)) return false;
+			}
 		}
 
 		return true;
@@ -548,7 +558,7 @@ export default class Item implements ItemTraits {
 	}
 
 	/**
-	 * Converts the Item into an easily readable String without Name. Does not includes wear.
+	 * Converts the Item into an easily readable String without Name. Does not includes wear, item number or uses.
 	 */
 	startAttributesToText() {
 		let final_name = "";
@@ -623,7 +633,7 @@ export default class Item implements ItemTraits {
 
 		return [usable, max_uses, remaining_uses];
 	}
-	static getSchemaItem(def_index?: number, name?: string) {
+	static getSchemaItem(def_index?: number, name?: string): ParsedSchemaEntry | undefined {
 		let schema_item;
 		if (def_index != undefined) schema_item = global_info.parsed_schema[def_index];
 		else if (name != undefined) schema_item = global_info.parsed_schema_names[name];
