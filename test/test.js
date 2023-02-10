@@ -10,7 +10,6 @@ import sku_tests from "./sku_tests.js";
 
 /* todo:
 more consistent output_item (just ItemAttributes?)
-save schema (allow parsing tf2 items without init)
 */
 
 doTests();
