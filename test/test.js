@@ -47,7 +47,7 @@ async function doTests() {
 	console.log("\nSucceeded with " + successes + "/" + total + " tests.");
 
 	function test(tests, func, title = "title", input_parse = "func", output_parse = "json") {
-		let stop_at = 5;
+		let stop_at = 9;
 		let i = 0;
 
 		for (let test of tests) {

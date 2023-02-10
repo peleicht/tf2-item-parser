@@ -621,6 +621,8 @@ export default class Item implements ItemTraits {
 			if (name.includes("Keyless")) usable = true;
 		} else if (type == "tool") {
 			usable = true;
+		} else if (type == "action") {
+			usable = true;
 			if (name.includes("Noise Maker") && ![536, 673, 2006].includes(def_index)) max_uses = 25;
 		}
 

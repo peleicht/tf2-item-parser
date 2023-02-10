@@ -12,7 +12,6 @@ import default_traits from "../data/default_traits.js";
 const EPaint = importJSON("/enums/EPaint.json") as Enum;
 
 const from_name_traits: ETraits[] = [
-	ETraits.all,
 	ETraits.craftable,
 	ETraits.killstreak,
 	ETraits.killstreak_sheen,
@@ -78,7 +77,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 	}
 
 	//sometimes types returned by bp will be wrong
-	tf2_item.quantity = Number(tf2_item.quantity);
+	if (tf2_item.quantity) tf2_item.quantity = Number(tf2_item.quantity);
 	for (let a of tf2_item.attribute!) {
 		a.def_index = Number(a.def_index);
 	}
