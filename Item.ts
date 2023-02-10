@@ -26,6 +26,7 @@ import parseTF2Item from "./parsers/TF2Item.js";
 import parseBPDocument from "./parsers/BPDocument.js";
 import parseBPURLItem from "./parsers/BPURLItem.js";
 import parseItemFormatItem from "./parsers/ItemFormatItem.js";
+import ETraits from "./enums/ETraits.js";
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const _ETextures = importJSON("/enums/ETextures.json") as Enum;
 const _parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
@@ -252,10 +253,10 @@ export default class Item implements ItemTraits {
 	/**
 	 * Compares two Items.
 	 * @param item
-	 * @param ignore_festivized set to true to ignore the festivized attribute. Default false.
-	 * @param ignore_uses set to true to ignore remainig uses attribute. Default false.
+	 * @param ignore_traits array of ETraits entries that should be ignored during the equality check.
 	 */
-	equal(item: Item, ignore_festivized: boolean = false, ignore_uses: boolean = false): boolean {
+	equal(item: Item, ignore_traits: ETraits[] = []): boolean {
+		if (ignore_traits.length != 0) return this.conditionalEqual(item, ignore_traits);
 		if (item.def_index == -1) return false;
 
 		if (
@@ -264,7 +265,7 @@ export default class Item implements ItemTraits {
 			this.craftable != item.craftable ||
 			this.killstreak != item.killstreak ||
 			this.australium != item.australium ||
-			(!ignore_festivized && this.festivized != item.festivized) ||
+			this.festivized != item.festivized ||
 			this.unusual != item.unusual ||
 			this.strange != item.strange ||
 			this.texture != item.texture ||
@@ -284,12 +285,10 @@ export default class Item implements ItemTraits {
 			if (this_output.item && !this_output.item.equal(that_output!.item!)) return false;
 		}
 
-		if (!ignore_uses) {
-			const this_full_uses = !this.usable || this.remaining_uses == this.max_uses;
-			const that_full_uses = !item.usable || item.remaining_uses == item.max_uses;
-			if (this_full_uses != that_full_uses) {
-				if (this.remaining_uses != item.remaining_uses) return false;
-			}
+		const this_full_uses = !this.usable || this.remaining_uses == this.max_uses;
+		const that_full_uses = !item.usable || item.remaining_uses == item.max_uses;
+		if (this_full_uses != that_full_uses) {
+			if (this.remaining_uses != item.remaining_uses) return false;
 		}
 
 		return true;
@@ -490,6 +489,55 @@ export default class Item implements ItemTraits {
 		if (this_spells.length != that_spells.length) return false;
 		for (let spell of this_spells) {
 			if (!that_spells.includes(spell)) return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Effectively same as this.equal, but used for handling the ignore_traits parameter (this.equal does not check this parameter to avoid the overhead when using the default empty setting).
+	 */
+	protected conditionalEqual(item: Item, ignore_traits: ETraits[] = []) {
+		if (item.def_index == -1) return false;
+
+		if (
+			(this.def_index != item.def_index && !ignore_traits.includes(ETraits.def_index)) ||
+			(this.quality != item.quality && !ignore_traits.includes(ETraits.quality)) ||
+			(this.craftable != item.craftable && !ignore_traits.includes(ETraits.craftable)) ||
+			(this.killstreak != item.killstreak && !ignore_traits.includes(ETraits.killstreak)) ||
+			(this.australium != item.australium && !ignore_traits.includes(ETraits.australium)) ||
+			(this.festivized != item.festivized && !ignore_traits.includes(ETraits.festivized)) ||
+			(this.unusual != item.unusual && !ignore_traits.includes(ETraits.unusual)) ||
+			(this.strange != item.strange && !ignore_traits.includes(ETraits.strange)) ||
+			(this.texture != item.texture && !ignore_traits.includes(ETraits.texture)) ||
+			(this.wear != item.wear && !ignore_traits.includes(ETraits.wear)) ||
+			(this.tradable != item.tradable && !ignore_traits.includes(ETraits.tradable)) ||
+			(this.type == "supply_crate" && this.item_number != item.item_number && !ignore_traits.includes(ETraits.item_number)) ||
+			(this.target_def_index != item.target_def_index && !ignore_traits.includes(ETraits.target_def_index))
+		) {
+			return false;
+		}
+
+		if (!ignore_traits.includes(ETraits.output_item)) {
+			const this_output = this.output_item;
+			const that_output = item.output_item;
+			if (Boolean(this_output) != Boolean(that_output)) return false;
+			if (this_output != undefined) {
+				if (this_output.def_index != that_output!.def_index || this_output.quality != that_output!.quality) return false;
+				if (this_output.item && !this_output.item.equal(that_output!.item!)) return false;
+			}
+		}
+
+		if (!ignore_traits.includes(ETraits.usable)) {
+			if (ignore_traits.includes(ETraits.remaining_uses)) {
+				if (this.usable != item.usable) return false;
+			} else {
+				const this_full_uses = !this.usable || this.remaining_uses == this.max_uses;
+				const that_full_uses = !item.usable || item.remaining_uses == item.max_uses;
+				if (this_full_uses != that_full_uses) {
+					if (this.remaining_uses != item.remaining_uses) return false;
+				}
+			}
 		}
 
 		return true;
