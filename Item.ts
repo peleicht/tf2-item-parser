@@ -17,6 +17,8 @@ import {
 	AllFormatAttributes,
 	BPDocumentType,
 	BPDocumentTypeOutgoing,
+	BPItemV1,
+	BPResolvable,
 	EconItemType,
 	TF2ItemType,
 	TF2Schema,
@@ -387,6 +389,10 @@ export default class Item implements ItemTraits {
 
 		return encodeURI(url);
 	}
+	/**
+	 * The new BP Item format. Used across the new v2 api endpoints.
+	 * @returns
+	 */
 	toBPDocument() {
 		const doc: BPDocumentTypeOutgoing = {
 			appid: 440,
@@ -439,6 +445,20 @@ export default class Item implements ItemTraits {
 		}
 
 		return doc;
+	}
+	/**
+	 * Specifically for the old batch create (/api/classifieds/list/v1) endpoint.
+	 */
+	toBPItemV1(): BPItemV1 {
+		let quality: string | number = this.quality;
+		if (this.strange && this.quality != EItemQuality.Strange) quality = "Strange " + EItemQuality[this.quality];
+
+		return {
+			item_name: this.toBPName(),
+			quality: quality,
+			craftable: this.craftable,
+			priceindex: this.getBPPriceIndex(),
+		};
 	}
 	private toBPName() {
 		let final_name = this.name;

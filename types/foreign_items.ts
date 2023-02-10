@@ -167,9 +167,15 @@ interface BPDocumentEntityOutgoing {
 	id?: number;
 	color?: string;
 }
+export interface BPItemV1 {
+	item_name: string;
+	quality: string | number;
+	craftable: boolean;
+	priceindex?: number | string;
+}
 export interface BPResolvable {
 	item: string;
-	quality: string;
+	quality: string | number;
 	tradable: boolean;
 	craftable: boolean;
 	priceindex?: number | string;
