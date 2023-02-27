@@ -12,7 +12,7 @@ export default function parseSKU(sku: string): ItemTraits | undefined {
 		traits.def_index = Number(split_sku.shift());
 		traits.quality = Number(split_sku.shift());
 		for (let a of split_sku) {
-			if (a.startsWith("u")) {
+			if (a.startsWith("u") && a != "uncraftable") {
 				traits.unusual = Number(a.substring(1));
 			} else if (a == "australium") {
 				traits.australium = true;
