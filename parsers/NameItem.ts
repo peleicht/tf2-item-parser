@@ -248,8 +248,8 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 
 function scanFor(name: string, trait: "quality" | "unusual" | "texture" | "wear"): number | undefined {
 	let search;
-	if (trait != "wear") search = (w: string) => name.startsWith(w + " ");
-	else search = (w: string) => name.endsWith(" " + w);
+	if (trait != "wear") search = (s: string) => name.startsWith(s + " ");
+	else search = (s: string) => name.endsWith(" " + s);
 
 	//@ts-ignore
 	const trait_list = trait_maps[trait + "_list"];
@@ -291,13 +291,17 @@ for (let q of qs) {
 	//@ts-ignore
 	trait_maps.quality_ids.push(EItemQuality[q]);
 }
-const unus = Object.keys(EUnusualEffects).sort((a, b) => b.length - a.length);
+const unus = Object.keys(EUnusualEffects)
+	.filter(value => isNaN(Number(value)))
+	.sort((a, b) => b.length - a.length);
 for (let u of unus) {
 	const u_normal = replaceSpecialCharacters(u.toLowerCase());
 	trait_maps.unusual_list.push(u_normal);
 	trait_maps.unusual_ids.push(EUnusualEffects[u] as number);
 }
-const texts = Object.keys(ETextures).sort((a, b) => b.length - a.length);
+const texts = Object.keys(ETextures)
+	.filter(value => isNaN(Number(value)))
+	.sort((a, b) => b.length - a.length);
 for (let t of texts) {
 	const t_normal = replaceSpecialCharacters(t.toLowerCase());
 	trait_maps.texture_list.push(t_normal);
