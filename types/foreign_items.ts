@@ -4,7 +4,7 @@ import { NumEnum, StringEnum } from "./index.js";
 
 export type EconItemType = {
 	assetid: string;
-	descriptions: EconDescription[];
+	descriptions?: EconDescription[];
 	name: string;
 	market_name: string;
 	market_hash_name: string;
