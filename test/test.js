@@ -8,10 +8,6 @@ import bp_api_item_tests from "./bp_api_item_tests.js";
 import name_tests from "./name_tests.js";
 import sku_tests from "./sku_tests.js";
 
-/* todo:
-more consistent output_item (just ItemAttributes?)
-*/
-
 doTests();
 async function doTests() {
 	await Item.init("2DFB813179B47E85D649D24B59E4CDBC");

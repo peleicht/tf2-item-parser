@@ -385,7 +385,7 @@ export default class Item implements ItemTraits {
 		let url = "https://backpack.tf/stats/" + EItemQuality[this.quality!] + "/" + this.toBPName();
 		const t = this.tradable ? "/Tradable" : "/Non-Tradable";
 		const c = this.craftable ? "/Craftable" : "/Non-Craftable";
-		url += t + c + "/" + (this.getBPPriceIndex() || "");
+		url += t + c + "/" + (this.getBPPriceIndex(false) || "");
 
 		return encodeURI(url);
 	}
@@ -469,8 +469,8 @@ export default class Item implements ItemTraits {
 		if (this.wear) final_name += " (" + EItemWear[this.wear] + ")";
 		return final_name;
 	}
-	private getBPPriceIndex() {
-		let index: number | string | undefined = this.unusual || this.target_def_index || this.item_number;
+	private getBPPriceIndex(use_item_number = true) {
+		let index: number | string | undefined = this.unusual || this.target_def_index || (use_item_number ? this.item_number : undefined);
 		if (this.def_index == 20000) {
 			const out = this.output_item;
 			let out_it = out!.item!.target_def_index;
