@@ -685,7 +685,7 @@ export function normalizeName(name: string) {
 
 export function replaceSpecialCharacters(text: string) {
 	text = text.normalize("NFKD");
-	if (text.startsWith("taunt") || text.startsWith("Taunt")) {
+	if (text.startsWith("taunt") || (text.startsWith("Taunt") && text.length != 5)) {
 		text = text.substring(6);
 		text = text.trim();
 	}

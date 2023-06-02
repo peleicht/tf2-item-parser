@@ -269,8 +269,10 @@ function getSchemaItemByName(name: string) {
 	if (name == "scrap") return global_info.parsed_schema[5000];
 
 	name = replaceSpecialCharacters(name);
+	const schema_item = global_info.parsed_schema_norm_names[name];
+	if (schema_item && schema_item.item_name != "") return schema_item;
 
-	return global_info.parsed_schema_norm_names[name];
+	return undefined;
 }
 
 export const unknown_traits: ETraits[] = [
