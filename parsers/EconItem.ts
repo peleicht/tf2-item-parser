@@ -10,7 +10,7 @@ import EKillstreaker from "../enums/EKillstreaker.js";
 import ESpells from "../enums/ESpells.js";
 import default_traits from "../data/default_traits.js";
 import Item from "../Item.js";
-const EPaint = importJSON("/enums/EPaint.json") as Enum;
+const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 
@@ -87,7 +87,7 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 			if (traits.paint === undefined && descs[0].value.startsWith("Paint Color: ")) {
 				const desc = descs.shift()!;
 				const paint_name = desc.value.substring("Paint Color: ".length);
-				traits.paint = EPaint[paint_name] as number;
+				traits.paint = EPaints[paint_name] as number;
 				if (descs.length == 0) break;
 			}
 

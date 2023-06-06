@@ -12,7 +12,7 @@ import ESpells from "../enums/ESpells.js";
 import EItemQuality from "../enums/EItemQuality.js";
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const ETextures = importJSON("/enums/ETextures.json") as Enum;
-const EPaint = importJSON("/enums/EPaint.json") as Enum;
+const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 
 /**
@@ -65,7 +65,7 @@ export default function parseItemFormatItem(item: AllFormatAttributes): ItemTrai
 		traits.quality = EItemQuality["Decorated Weapon"];
 	}
 
-	if (item.paint !== undefined) traits.paint = EPaint[item.paint] as number;
+	if (item.paint !== undefined) traits.paint = EPaints[item.paint] as number;
 
 	if (item.spells !== undefined) {
 		traits.spells = [];

@@ -7,7 +7,7 @@ import importJSON from "../types/importJSON.js";
 import { BPDocumentType } from "../types/foreign_items.js";
 import ESpells from "../enums/ESpells.js";
 import EItemQuality from "../enums/EItemQuality.js";
-const EPaint = importJSON("/enums/EPaint.json") as Enum;
+const EPaints = importJSON("/enums/EPaints.json") as Enum;
 
 export default function parseBPDocument(item: BPDocumentType): ItemTraits | undefined {
 	if (item.appid !== undefined && item.appid != 440) return;
@@ -49,7 +49,7 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 	}
 	traits.strange = Boolean(item.elevatedQuality) || traits.quality == EItemQuality.Strange;
 
-	if (item.paint) traits.paint = EPaint[item.paint.name] as number;
+	if (item.paint) traits.paint = EPaints[item.paint.name] as number;
 
 	if (item.spells) {
 		traits.spells = [];

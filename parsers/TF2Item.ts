@@ -9,7 +9,7 @@ import ESpells from "../enums/ESpells.js";
 import { FabricatorItem } from "tf2-backpack/dist/types.js";
 import { spellNames } from "tf2-backpack";
 import default_traits from "../data/default_traits.js";
-const EPaint = importJSON("/enums/EPaint.json") as Enum;
+const EPaints = importJSON("/enums/EPaints.json") as Enum;
 
 const from_name_traits: ETraits[] = [
 	ETraits.craftable,
@@ -114,7 +114,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		traits.texture = parsed_item.paintkit;
 		if (parsed_item.wear) traits.wear = Math.round(parsed_item.wear * 5);
 		traits.strange = traits.quality == 11 || parsed_item.elevated;
-		if (parsed_item.paint) traits.paint = EPaint[parsed_item.paint] as number;
+		if (parsed_item.paint) traits.paint = EPaints[parsed_item.paint] as number;
 		if (parsed_item.spells) {
 			//@ts-ignore typescript doesnt understand reverse mapping
 			traits.spells = parsed_item.spells.map(s => ESpells[spellNames[s]]);
