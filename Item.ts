@@ -31,6 +31,7 @@ import parseBPDocument from "./parsers/BPDocument.js";
 import parseBPURLItem from "./parsers/BPURLItem.js";
 import parseItemFormatItem from "./parsers/ItemFormatItem.js";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
+const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const _ETextures = importJSON("/enums/ETextures.json") as Enum;
 const _parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
@@ -719,7 +720,7 @@ export function replaceSpecialCharacters(text: string) {
 
 const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
 export { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects };
-export { EItemKillstreak, EItemQuality, EItemWear, EKillstreaker, EKillstreakSheen, ESpells, ETraits, EPaints };
+export { EItemKillstreak, EItemQuality, EItemWear, EKillstreaker, EKillstreakSheen, ESpells, ETraits, EPaints, EStrangeParts };
 export * from "./types/foreign_items.js";
 export * from "./types/index.js";
 export function isReady() {
