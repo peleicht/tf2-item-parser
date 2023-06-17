@@ -713,7 +713,7 @@ export function replaceSpecialCharacters(text: string) {
 		}
 	}
 
-	new_text = new_text.replace("\n", " ");
+	new_text = new_text.replace(/\n/g, " ");
 	while (new_text.includes("  ")) new_text = new_text.replace(/  /g, " "); //remove double spaces
 	return new_text.trim();
 }

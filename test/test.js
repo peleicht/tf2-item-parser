@@ -10,7 +10,7 @@ import sku_tests from "./sku_tests.js";
 
 doTests();
 async function doTests() {
-	await Item.init("2DFB813179B47E85D649D24B59E4CDBC");
+	await Item.init(""); //steam api key goes here
 	console.log("Initilization of Item Class successfull.\n");
 
 	let successes = 0;

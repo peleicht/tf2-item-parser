@@ -5,4 +5,5 @@ tsconfig.json
 prettierrc.json
 .vscode
 *.code-workspace
+*.temp
 test
