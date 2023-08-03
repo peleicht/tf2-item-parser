@@ -76,7 +76,7 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 
 	if (item.recipe && item.recipe.targetItem) {
 		if (item.recipe.targetItem) {
-			if (traits.def_index != 20000) traits.target_def_index = item.recipe.targetItem._source.defindex;
+			if (traits.def_index != 20000) traits.target_def_index = item.recipe?.targetItem?._source.defindex;
 
 			if (traits.def_index == 5661) {
 				//strangifier
@@ -86,19 +86,25 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 				};
 			} else if (traits.def_index == 20002) {
 				//killstreak kit fabricator
-				traits.output_item = {
-					item: new Item({
-						def_index: 5726,
-						quality: 6,
-						name: "Kit",
-						craftable: false,
-						killstreak:
-							item.recipe!.outputItem!.defindex == 20002 ? EItemKillstreak["Specialized Killstreak"] : EItemKillstreak["Professional Killstreak"],
-						killstreak_sheen: traits.killstreak_sheen,
-						killstreaker: traits.killstreaker,
-						target_def_index: traits.target_def_index,
-					}),
-				};
+				if (item.recipe?.outputItem) {
+					traits.output_item = {
+						item: new Item({
+							def_index: 5726,
+							quality: 6,
+							name: "Kit",
+							craftable: false,
+							killstreak:
+								item.recipe.outputItem.defindex == 20002 ? EItemKillstreak["Specialized Killstreak"] : EItemKillstreak["Professional Killstreak"],
+							killstreak_sheen: traits.killstreak_sheen,
+							killstreaker: traits.killstreaker,
+							target_def_index: traits.target_def_index,
+						}),
+					};
+				} else {
+					traits.output_item = {
+						item: undefined,
+					};
+				}
 				traits.killstreak = traits.output_item.item!.killstreak;
 				traits.killstreak_sheen = traits.output_item.item!.killstreak_sheen;
 				traits.killstreaker = traits.output_item.item!.killstreaker;
@@ -119,12 +125,18 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 			if (traits.def_index == 20000) {
 				//collectors/strangifier chemistry set
 				if (traits.quality == 14) {
-					traits.output_item = {
-						item: new Item({
-							def_index: item.recipe.outputItem.defindex,
-							quality: 14,
-						}),
-					};
+					if (item.recipe?.outputItem) {
+						traits.output_item = {
+							item: new Item({
+								def_index: item.recipe.outputItem.defindex,
+								quality: 14,
+							}),
+						};
+					} else {
+						traits.output_item = {
+							item: undefined,
+						};
+					}
 					traits.item_number = 3;
 				} else {
 					if (item.recipe.targetItem) {
