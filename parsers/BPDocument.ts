@@ -100,14 +100,14 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 							target_def_index: traits.target_def_index,
 						}),
 					};
+					traits.killstreak = traits.output_item.item!.killstreak;
+					traits.killstreak_sheen = traits.output_item.item!.killstreak_sheen;
+					traits.killstreaker = traits.output_item.item!.killstreaker;
 				} else {
 					traits.output_item = {
 						item: undefined,
 					};
 				}
-				traits.killstreak = traits.output_item.item!.killstreak;
-				traits.killstreak_sheen = traits.output_item.item!.killstreak_sheen;
-				traits.killstreaker = traits.output_item.item!.killstreaker;
 			}
 		}
 
