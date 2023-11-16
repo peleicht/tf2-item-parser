@@ -117,6 +117,7 @@ export default class Item implements ItemTraits {
 		this.type = traits.type;
 		//@ts-ignore
 		this.needs_the = traits.needs_the;
+		this.img = traits.img;
 		if (this.def_index == undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
 			let schema_item;
 			if (this.def_index != -2) schema_item = Item.getSchemaItem(this.def_index);

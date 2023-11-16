@@ -30,6 +30,7 @@ const from_name_traits: ETraits[] = [
 	ETraits.output_item,
 	ETraits.type,
 	ETraits.needs_the,
+	ETraits.img,
 ];
 
 /**

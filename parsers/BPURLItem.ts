@@ -2,13 +2,10 @@ import ETraits from "../enums/ETraits.js";
 import Item from "../Item.js";
 import { ItemTraits, item_traits } from "../types/index.js";
 import EItemQuality from "../enums/EItemQuality.js";
-import NameItem from "./NameItem.js";
 import default_traits from "../data/default_traits.js";
 
 //regex for parsing the url: [quality, name, tradable, craftable, index]
 const reg = /^https?:\/\/backpack\.tf\/stats\/([^\/]+)\/([^\/]+)\/([^\/]+)\/([^\/]+)\/?([^\/]*)\/?$/;
-
-//next
 
 const from_name_traits: ETraits[] = [
 	ETraits.all,
@@ -25,6 +22,7 @@ const from_name_traits: ETraits[] = [
 	ETraits.output_item,
 	ETraits.type,
 	ETraits.needs_the,
+	ETraits.img,
 ];
 
 /**
