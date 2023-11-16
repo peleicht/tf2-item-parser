@@ -79,6 +79,7 @@ export const item_traits = [
 	"type",
 	"needs_the",
 	"never_tradable",
+	"img",
 ];
 
 export interface ParsedSchema {
