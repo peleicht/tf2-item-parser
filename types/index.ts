@@ -48,6 +48,8 @@ export interface ItemTraits {
 	type?: ItemType;
 	needs_the?: boolean;
 	never_tradable?: boolean;
+
+	img?: string;
 }
 export const item_traits = [
 	"def_index",
@@ -88,6 +90,7 @@ export interface ParsedSchemaEntry {
 	proper_name: boolean;
 	type: ItemType;
 	norm_item_name: string;
+	img: string;
 }
 
 export type ItemType =

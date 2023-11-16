@@ -5,3 +5,4 @@ node_modules
 data_jsons
 *.temp
 TODO
+.env

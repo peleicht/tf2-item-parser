@@ -55,6 +55,7 @@ export function parseSchema(schema: TF2Schema): [ParsedSchema, ParsedSchema, Par
 			proper_name: item.proper_name,
 			type: (item_type_mapping[item.item_slot] || item.item_slot || item.item_class) as ItemType,
 			norm_item_name: normalizeName(item.item_name),
+			img: item.image_url_large,
 		};
 		new_parsed_schema[parsed.def_index] = parsed;
 		if (!new_parsed_schema_names[parsed.item_name]) new_parsed_schema_names[parsed.item_name] = parsed;

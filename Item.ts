@@ -102,6 +102,8 @@ export default class Item implements ItemTraits {
 	needs_the: boolean;
 	never_tradable: boolean; //some items are untradable now, but may become tradable later (i.e. after buying form the scm)
 
+	img?: string;
+
 	/**
 	 * Create a new Item Instance with known item traits. Will throw an error when specifing an unknown defindex.
 	 */
@@ -127,6 +129,7 @@ export default class Item implements ItemTraits {
 				if (this.name == "") this.name = schema_item.item_name;
 				this.type = schema_item.type;
 				this.needs_the = schema_item.proper_name;
+				this.img = schema_item.img;
 			}
 		}
 

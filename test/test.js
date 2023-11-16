@@ -7,10 +7,11 @@ import bp_document_item_tests from "./bp_document_item_tests.js";
 import bp_api_item_tests from "./bp_api_item_tests.js";
 import name_tests from "./name_tests.js";
 import sku_tests from "./sku_tests.js";
+import "dotenv/config";
 
 doTests();
 async function doTests() {
-	await Item.init(""); //steam api key goes here
+	await Item.init(process.env.STEAM_API_KEY);
 	console.log("Initilization of Item Class successfull.\n");
 
 	let successes = 0;
@@ -42,7 +43,6 @@ async function doTests() {
 	console.log("\nSucceeded with " + successes + "/" + total + " tests.");
 
 	function test(tests, func, title = "title", input_parse = "func", output_parse = "json") {
-		let stop_at = 9;
 		let i = 0;
 
 		for (let test of tests) {
@@ -50,15 +50,10 @@ async function doTests() {
 			const test_title = test[title];
 
 			try {
-				if (stop_at <= i) {
-					let x;
-				}
-
 				const input = parseItem(test.input, input_parse);
 				const output = parseItem(test.expected_output, output_parse);
 				if (typeof input == "object") success = input.equalExact(output);
 				else success = input == output;
-				let x;
 			} catch (err) {
 				console.log("Error during " + test_title + ": " + err);
 				if (err.stack) console.log(err.stack);
@@ -67,7 +62,9 @@ async function doTests() {
 			if (success) {
 				console.log("	✅ " + test_title);
 				successes++;
-			} else console.log("	❌ " + test_title);
+			} else {
+				console.log("	❌ " + test_title);
+			}
 			total++;
 
 			i++;
