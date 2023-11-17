@@ -256,6 +256,10 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 		if (traits.type != "misc") traits.strange_parts!.splice(kills_part, 1); //"Kills" strange part is only for cosmetic but looks same as strange weapons
 	}
 
+	if (econ_item.icon_url_large || econ_item.icon_url) {
+		traits.img = "https://steamcommunity-a.akamaihd.net/economy/image/" + (econ_item.icon_url_large || econ_item.icon_url);
+	}
+
 	return traits;
 }
 
