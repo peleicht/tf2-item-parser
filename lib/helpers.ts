@@ -2,22 +2,36 @@ import { writeFile, rename } from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import SchemaManager from "tf2-schema";
-
-import importJSON from "../types/importJSON.js";
 import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
 import { normalizeName, TF2Schema } from "../Item.js";
+import importJSON from "../types/importJSON.js";
 
 const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
 const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
 const parsed_schema_norm_names = importJSON("/data/parsed_schema_norm_names.json") as ParsedSchema;
 const promos = importJSON("/data/promos.json") as NumEnum;
 
-export async function makeSchema(steam_api_key: string) {
+let schema_listener_set = false;
+
+export async function makeSchema(steam_api_key: string): Promise<TF2Schema> {
+	const schemaManager = new SchemaManager({ apiKey: steam_api_key, updateTime: -1 });
+
+	if (!schema_listener_set) {
+		schema_listener_set = true;
+		schemaManager.on("schema", (schema: TF2Schema) => {
+			saveFile(schema, "schema", false);
+		});
+	}
+
 	return new Promise<TF2Schema>((res, rej) => {
-		const schemaManager = new SchemaManager({ apiKey: steam_api_key, updateTime: -1 });
 		schemaManager.init(async (err: any) => {
 			if (err) {
 				rej("SchemaManager init failed: " + err);
+
+				//use backup schema
+				const schema = importJSON("/data/schema.json");
+				schemaManager.setSchema(schema, false);
+				res(schemaManager.schema as TF2Schema);
 			} else {
 				res(schemaManager.schema as TF2Schema);
 			}
