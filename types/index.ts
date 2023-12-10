@@ -6,9 +6,6 @@ export interface Enum {
 export interface NumEnum {
 	[key: string]: number;
 }
-export interface StringEnum {
-	[key: string]: string;
-}
 
 export interface ItemTraits {
 	def_index?: number;

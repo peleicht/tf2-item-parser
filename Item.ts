@@ -20,7 +20,6 @@ import {
 	BPItemV1,
 	EconItemType,
 	TF2ItemType,
-	TF2Schema,
 	TradeOfferManagerItem,
 } from "./types/foreign_items.js";
 import parseName from "./parsers/NameItem.js";
@@ -30,6 +29,7 @@ import parseTF2Item from "./parsers/TF2Item.js";
 import parseBPDocument from "./parsers/BPDocument.js";
 import parseBPURLItem from "./parsers/BPURLItem.js";
 import parseItemFormatItem from "./parsers/ItemFormatItem.js";
+import { Schema } from "@peleicht/tf2-schema";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
@@ -48,7 +48,7 @@ export const global_info = {
 	tf2_item_parser: undefined as BackpackParser | undefined,
 	EUnusualEffects: _EUnusualEffects,
 	ETextures: _ETextures,
-	schema: undefined as TF2Schema | undefined,
+	schema: undefined as Schema | undefined,
 };
 
 const usables_uses: NumEnum = {
@@ -176,9 +176,9 @@ export default class Item implements ItemTraits {
 	}
 
 	static async init(steam_api_key: string): Promise<void>;
-	static init(schema: TF2Schema): void;
-	static async init(init_value: string | TF2Schema) {
-		let schema: TF2Schema;
+	static init(schema: Schema): void;
+	static async init(init_value: string | Schema) {
+		let schema: Schema;
 		if (typeof init_value == "string") schema = await makeSchema(init_value);
 		else schema = init_value;
 

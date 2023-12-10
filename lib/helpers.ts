@@ -1,9 +1,9 @@
 import { writeFile, rename } from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
-import SchemaManager from "tf2-schema";
+import SchemaManager, { Schema } from "@peleicht/tf2-schema";
 import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
-import { normalizeName, TF2Schema } from "../Item.js";
+import { normalizeName } from "../Item.js";
 import importJSON from "../types/importJSON.js";
 
 const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
@@ -13,36 +13,33 @@ const promos = importJSON("/data/promos.json") as NumEnum;
 
 let schema_listener_set = false;
 
-export async function makeSchema(steam_api_key: string): Promise<TF2Schema> {
+export async function makeSchema(steam_api_key: string): Promise<Schema> {
 	const schemaManager = new SchemaManager({ apiKey: steam_api_key, updateTime: -1 });
 
 	if (!schema_listener_set) {
 		schema_listener_set = true;
-		schemaManager.on("schema", (schema: TF2Schema) => {
+		schemaManager.on("schema", (schema: Schema) => {
 			saveFile(schema, "schema", false);
 		});
 	}
 
-	return new Promise<TF2Schema>((res, rej) => {
-		schemaManager.init(async (err: any) => {
-			if (err) {
-				rej("SchemaManager init failed: " + err);
+	try {
+		await schemaManager.init();
+	} catch (err) {
+		console.log("SchemaManager init failed: " + err);
 
-				//use backup schema
-				const schema = importJSON("/data/schema.json");
-				schemaManager.setSchema(schema, false);
-				res(schemaManager.schema as TF2Schema);
-			} else {
-				res(schemaManager.schema as TF2Schema);
-			}
-		});
-	});
+		//use backup schema
+		const schema = importJSON("/data/schema.json");
+		schemaManager.setSchema(schema, false);
+	}
+
+	return schemaManager.schema!;
 }
 
 /**
  * Normalizes the names in the Schema, writes them to item.norm_item_name. Updated promos, then restarts bot if anything changed.
  */
-export function parseSchema(schema: TF2Schema): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
+export function parseSchema(schema: Schema): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
 	if (schema.raw.schema.items.length == Object.keys(parsed_schema).length)
 		return [parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos];
 
