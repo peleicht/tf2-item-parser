@@ -66,6 +66,7 @@ export const item_traits = [
 	"tradable",
 	"paint",
 	"spells",
+	"strange_parts",
 	"usable",
 	"max_uses",
 	"remaining_uses",
