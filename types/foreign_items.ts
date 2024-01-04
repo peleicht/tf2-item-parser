@@ -1,6 +1,9 @@
 import { ItemAttributes } from "tf2-item-format/.";
 import { ParsedEconItem } from "tf2-item-format/dist/types/index.js";
 
+/**
+ * Type for items from the steam api, node-steam-user and node-steamcommunity.
+ */
 export type EconItemType = {
 	assetid: string;
 	descriptions?: EconDescription[];
@@ -47,6 +50,9 @@ type EconTag = {
 	color?: string;
 };
 
+/**
+ * Type for items from the node-tf2 module and some older backpack.tf api endpoints.
+ */
 export interface TF2ItemType {
 	id: string;
 	defindex?: number;
@@ -56,10 +62,10 @@ export interface TF2ItemType {
 	quantity: number;
 	attribute?: TF2Attribute[];
 	attributes?: TF2Attribute[];
-	contained_item?: TF2ItemType; //following only on items from bpapi
+	contained_item?: TF2ItemType; //following only on items from bp api
 	name?: string;
 }
-export interface TF2Attribute {
+interface TF2Attribute {
 	defindex?: number;
 	def_index?: number;
 	value?: number;
@@ -74,6 +80,9 @@ type None<T> = { [K in keyof T]?: never };
 type EitherOrBoth<T1, T2> = (T1 & None<T2>) | (T2 & None<T1>) | (T1 & T2);
 export type AllFormatAttributes = EitherOrBoth<ItemAttributes, ParsedEconItem>;
 
+/**
+ * Type for items from newer backpack.tf api endpoints (snapshot, v2).
+ */
 export interface BPDocumentType {
 	appid?: 440;
 	baseName: string;
@@ -129,6 +138,9 @@ interface BPDocumentEntity {
 	id: number;
 	color?: string;
 }
+/**
+ * Type for items for newer backpack.tf api endpoints (v2). Specifically for items that we send to the api, which is a subset of the full type.
+ */
 export interface BPDocumentTypeOutgoing {
 	appid?: 440;
 	baseName: string;
@@ -166,16 +178,13 @@ interface BPDocumentEntityOutgoing {
 	id?: number;
 	color?: string;
 }
+
+/**
+ * Type for items from old backpack.tf api endpoints (v1).
+ */
 export interface BPItemV1 {
 	item_name: string;
 	quality: string | number;
-	craftable: boolean;
-	priceindex?: number | string;
-}
-export interface BPResolvable {
-	item: string;
-	quality: string | number;
-	tradable: boolean;
 	craftable: boolean;
 	priceindex?: number | string;
 }

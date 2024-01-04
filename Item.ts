@@ -89,26 +89,26 @@ export default class Item implements ItemTraits {
 	max_uses?: number;
 	remaining_uses?: number;
 
-	item_number?: number; //meaning depends on this.type
-	target_def_index?: number; //def_index of item that this can be used on
-	input_items?: string[]; //input items required for this item to become usable
+	item_number?: number;
+	target_def_index?: number;
+	input_items?: string[];
 	output_item?: {
 		def_index?: number;
 		quality?: number;
-		item?: Item; //item resulting from the use of this item, either def_index and quality or item is defined
+		item?: Item;
 	};
 
 	type: ItemType;
 	needs_the: boolean;
-	never_tradable: boolean; //some items are untradable now, but may become tradable later (i.e. after buying form the scm)
+	never_tradable: boolean;
 
 	img?: string;
 
 	/**
-	 * Create a new Item Instance with known item traits. Will throw an error when specifing an unknown defindex.
+	 * Create a new Item Instance with known item traits. Will throw an error when specifing an unknown def_index.
 	 */
 	constructor(traits: ItemTraits) {
-		const def_index = Item.correctDefIndex(traits.def_index);
+		const def_index = Item.normalizeDefIndex(traits.def_index);
 		if (def_index !== undefined) this.def_index = def_index;
 		else this.def_index = -2;
 		this.quality = traits.quality !== undefined ? traits.quality : default_traits.quality;
@@ -162,7 +162,7 @@ export default class Item implements ItemTraits {
 		}
 
 		this.item_number = traits.item_number;
-		this.target_def_index = Item.correctDefIndex(traits.target_def_index);
+		this.target_def_index = Item.normalizeDefIndex(traits.target_def_index);
 		this.input_items = traits.input_items;
 		if (traits.output_item) {
 			if (traits.output_item.item) this.output_item = { item: new Item(traits.output_item.item) };
@@ -178,6 +178,11 @@ export default class Item implements ItemTraits {
 		if (this.never_tradable) this.tradable = false;
 	}
 
+	/**
+	 * Initialize the Item class with a Steam API Key or a schema from tf2-schema. When providing an api key, this will automatically call itself every few hours.
+	 * This will update item definitions, so it should at least to be called following new tf2 updates.
+	 * Most methods work without calling this, but it is required to parse items from the node-tf2 module.
+	 */
 	static async init(steam_api_key: string): Promise<void>;
 	static init(schema: Schema): void;
 	static async init(init_value: string | Schema) {
@@ -199,7 +204,7 @@ export default class Item implements ItemTraits {
 		global_info.schema = schema;
 		global_info.ready = true;
 
-		if (typeof init_value == "string") setTimeout(() => this.init(init_value), 1 * 60 * 60 * 1000);
+		if (typeof init_value == "string") setTimeout(() => this.init(init_value), 4 * 60 * 60 * 1000);
 	}
 
 	static KEY = new Item({ def_index: 5021, quality: 6, name: "Mann Co. Supply Crate Key" });
@@ -209,42 +214,53 @@ export default class Item implements ItemTraits {
 	static FESTIVIZER = new Item({ def_index: 5839, quality: 6, craftable: false, name: "Festivizer" });
 	static WILDCARD = new Item({ def_index: -1, name: "Wildcard" });
 
-	static fromName(name: string, strict = false): Item | undefined {
+	/**
+	 * Parses an item from a string. Ignores case and special characters. Will return undefined if the string is not a valid item.
+	 * @param name the name of the item
+	 * @param strict pass false to allow ignoring unrecognized words, which may catch typos but also lead to unexpected results. Default true.
+	 */
+	static fromName(name: string, strict = true): Item | undefined {
 		return Item.makeItem(name, parseName, strict);
 	}
 
+	/**
+	 * Parses an item from a SKU.
+	 */
 	static fromSKU(sku: string): Item | undefined {
 		return Item.makeItem(sku, parseSKU);
 	}
 
 	/**
-	 * For items from the steam api, node-steam-user and node-steamcommunity
+	 * Parses items from the steam api, node-steam-user and node-steamcommunity.
 	 */
 	static fromEconItem(item: EconItemType): Item | undefined {
 		return Item.makeItem(item, parseEconItem);
 	}
 
 	/**
-	 * For the tf2 node module and some older bp api endpoints.
+	 * Parses items from the node-tf2 module and some older backpack.tf api endpoints.
 	 */
 	static fromTF2(item: TF2ItemType): Item | undefined {
 		return Item.makeItem(item, parseTF2Item);
 	}
 
 	/**
-	 * For conversion from the tf2-item-format node module.
+	 * Parses items from the tf2-item-format node module.
 	 */
 	static fromItemFormat(item: AllFormatAttributes): Item | undefined {
 		return Item.makeItem(item, parseItemFormatItem);
 	}
 
 	/**
-	 * For the newer bp api endpoints.
+	 * Parses items from newer backpack.tf api endpoints (snapshot, websocket, v2).
 	 */
 	static fromBPDocument(item: BPDocumentType): Item | undefined {
 		return Item.makeItem(item, parseBPDocument);
 	}
 
+	/**
+	 * Parses items from a URL to a backpack.tf "stats" page (https://backpack.tf/stats/...).
+	 */
 	static fromBPURL(url: string): Item | undefined {
 		return Item.makeItem(url, parseBPURLItem);
 	}
@@ -258,6 +274,9 @@ export default class Item implements ItemTraits {
 		}
 	}
 
+	/**
+	 * Creates an Item from an ItemTraits object. Useful for converting an Item back after using *toJSON*.
+	 */
 	static fromJSON(json: ItemTraits): Item {
 		if (json.output_item?.item) {
 			if (!(json.output_item.item instanceof Item)) json.output_item.item = Item.fromJSON(json.output_item.item!);
@@ -267,8 +286,11 @@ export default class Item implements ItemTraits {
 
 	/**
 	 * Compares two Items.
+	 * Only compares traits that meaningfully differentiate items (i.e. ignores paint, killstreak sheens, killstreakers, strange parts and spells).
+	 * Use .equalExact to compare all traits.
 	 * @param item
 	 * @param ignore_traits array of ETraits entries that should be ignored during the equality check.
+	 * @return true if the items are equal, false otherwise.
 	 */
 	equal(item: Item, ignore_traits: ETraits[] = []): boolean {
 		if (ignore_traits.length != 0) return this.conditionalEqual(item, ignore_traits);
@@ -317,13 +339,12 @@ export default class Item implements ItemTraits {
 	 */
 	isCurrency() {
 		if (this.quality != 6 || !this.craftable) return false;
-		const def_index = this.def_index;
-		return def_index == 5021 || def_index == 5002 || def_index == 5001 || def_index == 5000;
+		return this.def_index == 5021 || this.def_index == 5002 || this.def_index == 5001 || this.def_index == 5000;
 	}
 
 	/**
-	 * Converts the Item into an easily readable String.
-	 * @param include_uses Include Uses at end when required (ie. "(2/5 uses)"). Default true.
+	 * Converts the Item to its fully qualified name. Includes name, quality, killstreak, etc.
+	 * @param include_uses Include number of remaining uses at end when item is usable and does not have all uses remaining (ie. " (2/5 uses)"). Default true.
 	 */
 	toString(include_uses = true) {
 		let final_name = this.name || String(this.def_index) || "unknown";
@@ -342,6 +363,10 @@ export default class Item implements ItemTraits {
 		return final_name;
 	}
 
+	/**
+	 * Converts the Item to a SKU. Equivalent to the widely used Marketplace.tf SKU.
+	 * Note that the backpack.tf api usually expects a name (use *toString*) when using the sku parameter.
+	 */
 	toSKU() {
 		if (this.def_index === undefined || !this.quality) return;
 
@@ -371,6 +396,10 @@ export default class Item implements ItemTraits {
 		return sku;
 	}
 
+	/**
+	 * Converts the Item to JSON. Useful for saving items to a database or file. Convert them back to items using *fromJSON*.
+	 * @param include_defaults Include traits that are equal to their default value, greatly increasing the size of the output. Default false.
+	 */
 	toJSON(include_defaults = false): ItemTraits {
 		const json = {} as any;
 
@@ -390,7 +419,7 @@ export default class Item implements ItemTraits {
 	}
 
 	/**
-	 * no recipes except unusualifiers and strangifiers
+	 * Obtains the URL to the item on backpack.tf.
 	 */
 	toBPURL() {
 		let url = "https://backpack.tf/stats/" + EItemQuality[this.quality!] + "/" + this.toBPName();
@@ -401,8 +430,7 @@ export default class Item implements ItemTraits {
 		return encodeURI(url);
 	}
 	/**
-	 * The new BP Item format. Used across the new v2 api endpoints.
-	 * @returns
+	 * Converts the item to the new backpack.tf item format. Used across the new v2 api endpoints.
 	 */
 	toBPDocument() {
 		const doc: BPDocumentTypeOutgoing = {
@@ -458,7 +486,7 @@ export default class Item implements ItemTraits {
 		return doc;
 	}
 	/**
-	 * Specifically for the old batch create (/api/classifieds/list/v1) endpoint.
+	 * Converts the item to an item for the old backpack.tf api endpoints.
 	 */
 	toBPItemV1(): BPItemV1 {
 		let quality: string | number = this.quality;
@@ -496,14 +524,6 @@ export default class Item implements ItemTraits {
 					index = out_item.def_index + "-14";
 				}
 			}
-			/* const out = this.output_item;
-			let out_it = out!.item!.target_def_index;
-			let out_q = 11;
-			if (this.quality == 14) {
-				out_it = out!.item!.def_index;
-				out_q = 14;
-			}
-			index = out_it! + "-" + out_q!; */
 		} else if (this.def_index == 20002) {
 			const fabricator_def_index = this.killstreak == EItemKillstreak["Professional Killstreak"] ? 6526 : 6523;
 			const target = this.target_def_index ? "-" + this.target_def_index : "";
@@ -514,13 +534,18 @@ export default class Item implements ItemTraits {
 		else return undefined;
 	}
 
+	/**
+	 * Creates a TradeOfferManager item from the Item. Used for sending trade offers using steam-tradeoffer-manager.
+	 */
 	toTradeOfferManagerItem(): TradeOfferManagerItem {
 		if (!this.id) throw "Cannot construct TradeOfferManager item without an id: " + this.toString();
 		return { assetid: this.id, appid: 440, contextid: 2 };
 	}
 
 	/**
-	 * Compare all item traits, even those one would rarely check like killstreak sheen, paints and strange parts. Recommend using .equal instead.
+	 * Compare all item traits, even those one would rarely check like killstreak sheen, paints and strange parts. Recommend using *.equal* instead.
+	 * @item item to compare to
+	 * @ignore_traits array of ETraits entries that should be ignored during the equality check.
 	 */
 	equalExact(item: Item, ignore_traits: ETraits[] = []) {
 		if (!this.equal(item, ignore_traits)) return false;
@@ -606,6 +631,9 @@ export default class Item implements ItemTraits {
 		return true;
 	}
 
+	/**
+	 * Duplicate the Item. Useful for creating a copy of an item that can be modified without affecting the original.
+	 */
 	duplicate() {
 		return new Item(this.toJSON());
 	}
@@ -657,12 +685,19 @@ export default class Item implements ItemTraits {
 		return final_name.trim();
 	}
 
-	static correctDefIndex(def_index?: number) {
+	/**
+	 * Some Items have several possible def_index values depending on quality, style or obtain method. This method returns the lowest possible def_index for the item.
+	 */
+	static normalizeDefIndex(def_index?: number) {
 		if (def_index && global_info.promos[def_index] !== undefined) return global_info.promos[def_index];
 		return def_index;
 	}
 
-	static identifyUses(def_index: number, name: string, type: string): [boolean, number | undefined, number | undefined] {
+	/**
+	 * Identifies if an item is usable and how many uses it has.
+	 * @returns [usable, max_uses, remaining_uses]
+	 */
+	static identifyUses(def_index: number, name: string, type: ItemType): [boolean, number | undefined, number | undefined] {
 		let usable = false;
 		let max_uses: number | undefined = undefined;
 		let remaining_uses: number | undefined = undefined;
@@ -688,6 +723,10 @@ export default class Item implements ItemTraits {
 
 		return [usable, max_uses, remaining_uses];
 	}
+
+	/**
+	 * Get the parsed schema entry for an item.
+	 */
 	static getSchemaItem(def_index?: number, name?: string): ParsedSchemaEntry | undefined {
 		let schema_item;
 		if (def_index != undefined) schema_item = global_info.parsed_schema[def_index];
@@ -699,6 +738,9 @@ export default class Item implements ItemTraits {
 	}
 }
 
+/**
+ * Normalize an item name. Removes special characters, double spaces, "the" and "taunt" from the start.
+ */
 export function normalizeName(name: string) {
 	name = name.normalize("NFKD");
 	name = name.toLowerCase();
@@ -714,6 +756,11 @@ export function normalizeName(name: string) {
 	return name;
 }
 
+/**
+ * Replace special characters with their normal counterparts. Removes double spaces, "the" and "taunt" from the start.
+ *
+ * Used for normalizing item names, textures and unusual effects.
+ */
 export function replaceSpecialCharacters(text: string) {
 	text = text.normalize("NFKD");
 	if (text.startsWith("taunt") || (text.startsWith("Taunt") && text.length != 5)) {
@@ -753,6 +800,10 @@ export { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, E
 export { EItemKillstreak, EItemQuality, EItemWear, EKillstreaker, EKillstreakSheen, ESpells, ETraits, EPaints, EStrangeParts };
 export * from "./types/foreign_items.js";
 export * from "./types/index.js";
+
+/**
+ * After calling *init*, this will return true when the Item class is ready to be used.
+ */
 export function isReady() {
 	return global_info.ready;
 }

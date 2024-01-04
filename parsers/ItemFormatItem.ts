@@ -21,7 +21,7 @@ const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 export default function parseItemFormatItem(item: AllFormatAttributes): ItemTraits | undefined {
 	const traits: ItemTraits = {};
 
-	if (item.defindex !== undefined) traits.def_index = Item.correctDefIndex(item.defindex);
+	if (item.defindex !== undefined) traits.def_index = Item.normalizeDefIndex(item.defindex);
 	if (typeof item.quality == "number") traits.quality = item.quality;
 	//@ts-ignore
 	else traits.quality = EItemQuality[item.quality];

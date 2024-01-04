@@ -1,5 +1,3 @@
-import { ItemTraits } from "../types/index.js";
-
 export default {
 	quality: 6,
 	craftable: true,

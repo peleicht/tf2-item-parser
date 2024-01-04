@@ -14,7 +14,7 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 
 	const traits: ItemTraits = {};
 
-	traits.def_index = Item.correctDefIndex(item.defindex);
+	traits.def_index = Item.normalizeDefIndex(item.defindex);
 	traits.name = item.baseName;
 	const schema_item = Item.getSchemaItem(traits.def_index!, traits.name!);
 	if (schema_item) {

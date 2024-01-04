@@ -88,7 +88,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		const [parsed_item] = global_info.tf2_item_parser.parseBackpack([tf2_item as any], false);
 		if (parsed_item.defindex == undefined) return;
 
-		traits.def_index = Item.correctDefIndex(parsed_item.defindex);
+		traits.def_index = Item.normalizeDefIndex(parsed_item.defindex);
 		//@ts-ignore sometimes like this which is not defined in its type
 		if (typeof parsed_item.quality == "object") traits.quality = parsed_item.quality.id;
 		else traits.quality = parsed_item.quality;
