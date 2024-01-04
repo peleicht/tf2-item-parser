@@ -191,6 +191,7 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 		traits.name = from_name.item_name;
 		traits.needs_the = from_name.proper_name;
 		traits.def_index = from_name.def_index;
+		traits.img = from_name.img;
 	} else {
 		//item is special recipe item as defined above
 		if (traits.def_index == 20000) {

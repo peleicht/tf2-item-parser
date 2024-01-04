@@ -22,6 +22,7 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 		traits.type = schema_item.type;
 		traits.needs_the = schema_item.proper_name;
 	}
+	traits.img = item.imageUrl;
 
 	traits.quality = item.quality.id;
 	if (item.id) traits.id = item.id;

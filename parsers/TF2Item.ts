@@ -126,6 +126,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		traits.name = schema_item.item_name;
 		traits.type = schema_item.type;
 		traits.needs_the = schema_item.proper_name;
+		traits.img = schema_item.img;
 
 		const [usable, max_uses, remaining_uses] = Item.identifyUses(traits.def_index!, traits.name, traits.type)!;
 		traits.usable = usable;

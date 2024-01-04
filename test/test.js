@@ -11,6 +11,9 @@ import "dotenv/config";
 
 doTests();
 async function doTests() {
+	const item = Item.fromName("Strange Professional Killstreak Australium Rocket Launcher");
+	const sku = item.toSKU();
+
 	await Item.init(process.env.STEAM_API_KEY);
 	console.log("Initilization of Item Class successfull.\n");
 
@@ -41,6 +44,8 @@ async function doTests() {
 	test(sku_tests, Item.toSKU, "title", "json-sku", "none");
 
 	console.log("\nSucceeded with " + successes + "/" + total + " tests.");
+
+	process.exit();
 
 	function test(tests, func, title = "title", input_parse = "func", output_parse = "json") {
 		let i = 0;
