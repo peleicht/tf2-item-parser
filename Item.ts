@@ -102,8 +102,6 @@ export default class Item implements ItemTraits {
 	needs_the: boolean;
 	never_tradable: boolean;
 
-	img?: string;
-
 	/**
 	 * Create a new Item Instance with known item traits. Will throw an error when specifing an unknown def_index.
 	 */
@@ -117,7 +115,6 @@ export default class Item implements ItemTraits {
 		this.type = traits.type;
 		//@ts-ignore
 		this.needs_the = traits.needs_the;
-		this.img = traits.img;
 		if (this.def_index == undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
 			let schema_item;
 			if (this.def_index != -2) schema_item = Item.getSchemaItem(this.def_index);
@@ -130,7 +127,6 @@ export default class Item implements ItemTraits {
 				if (this.name == "") this.name = schema_item.item_name;
 				this.type = schema_item.type;
 				this.needs_the = schema_item.proper_name;
-				if (!this.img) this.img = schema_item.img;
 			}
 		}
 
@@ -184,7 +180,7 @@ export default class Item implements ItemTraits {
 	 * Most methods work without calling this, but it is required to parse items from the node-tf2 module.
 	 */
 	static async init(steam_api_key: string): Promise<void>;
-	static init(schema: Schema): void;
+	static async init(schema: Schema): Promise<void>;
 	static async init(init_value: string | Schema) {
 		let schema: Schema;
 		if (typeof init_value == "string") schema = await makeSchema(init_value);
