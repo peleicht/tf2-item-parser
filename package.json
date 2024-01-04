@@ -1,6 +1,6 @@
 {
 	"name": "tf2-item-parser",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Utility module to deal with anything related to tf2 item formats.",
 	"type": "module",
 	"main": "./dist/Item.js",
@@ -14,7 +14,12 @@
 		"parser"
 	],
 	"author": "Brom127",
-	"license": "CC BY-NC-SA 4.0",
+	"license": "MIT",
+	"homepage": "https://github.com/peleicht/tf2-item-parser",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/peleicht/tf2-item-parser"
+	},
 	"dependencies": {
 		"tf2-backpack": "^1.2.0",
 		"tf2-item-format": "^5.9.7",
