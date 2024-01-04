@@ -97,7 +97,8 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 				const part_match = desc.value.match(/^\((.*): 0\)$/);
 				if (part_match) {
 					if (!traits.strange_parts) traits.strange_parts = [];
-					traits.strange_parts.push(EStrangeParts[part_match[1]] as number);
+					const part = EStrangeParts[part_match[1]] as number;
+					if (part) traits.strange_parts.push(part);
 					if (descs.length == 0) break;
 				} else {
 					descs.unshift(desc); //just in case
