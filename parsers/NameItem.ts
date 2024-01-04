@@ -205,6 +205,7 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 						needs_the: from_name.proper_name,
 					}),
 				};
+				traits.quality = 6;
 			} else {
 				traits.output_item = {
 					item: new Item({
@@ -215,7 +216,9 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 					}),
 				};
 			}
-		} else traits.target_def_index = from_name.def_index;
+		} else {
+			traits.target_def_index = from_name.def_index;
+		}
 		if (traits.def_index == 5661) {
 			//strangifier
 			traits.output_item = {

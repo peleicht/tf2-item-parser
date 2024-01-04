@@ -164,7 +164,10 @@ export default class Item implements ItemTraits {
 		this.item_number = traits.item_number;
 		this.target_def_index = Item.correctDefIndex(traits.target_def_index);
 		this.input_items = traits.input_items;
-		this.output_item = traits.output_item;
+		if (traits.output_item) {
+			if (traits.output_item.item) this.output_item = { item: new Item(traits.output_item.item) };
+			else this.output_item = traits.output_item;
+		}
 
 		this.never_tradable = traits.never_tradable !== undefined ? traits.never_tradable : default_traits.never_tradable;
 
@@ -293,8 +296,11 @@ export default class Item implements ItemTraits {
 		const that_output = item.output_item;
 		if (Boolean(this_output) != Boolean(that_output)) return false;
 		if (this_output != undefined) {
-			if (this_output.def_index != that_output!.def_index || this_output.quality != that_output!.quality) return false;
-			if (this_output.item && !this_output.item.equal(that_output!.item!)) return false;
+			if (this_output.def_index !== undefined) {
+				if (this_output.def_index != that_output!.def_index || this_output.quality != that_output!.quality) return false;
+			} else {
+				if (!this_output.item!.equal(that_output!.item!)) return false;
+			}
 		}
 
 		const this_full_uses = !this.usable || this.remaining_uses == this.max_uses;
@@ -476,15 +482,32 @@ export default class Item implements ItemTraits {
 	}
 	private getBPPriceIndex(use_item_number = true) {
 		let index: number | string | undefined = this.unusual || this.target_def_index || (use_item_number ? this.item_number : undefined);
-		if (this.def_index == 20000) {
-			const out = this.output_item;
+
+		if (this.def_index == 5726) {
+			const target = this.target_def_index ? "-" + this.target_def_index : "";
+			index = this.killstreak + target;
+		} else if (this.def_index == 20000) {
+			const out_item = this.output_item?.item;
+			if (out_item) {
+				if (out_item.quality == 6) {
+					const target = out_item.target_def_index ? "-" + out_item.target_def_index : "";
+					index = "6522-6" + target;
+				} else {
+					index = out_item.def_index + "-14";
+				}
+			}
+			/* const out = this.output_item;
 			let out_it = out!.item!.target_def_index;
 			let out_q = 11;
 			if (this.quality == 14) {
 				out_it = out!.item!.def_index;
 				out_q = 14;
 			}
-			index = out_it! + "-" + out_q!;
+			index = out_it! + "-" + out_q!; */
+		} else if (this.def_index == 20002) {
+			const fabricator_def_index = this.killstreak == EItemKillstreak["Professional Killstreak"] ? 6526 : 6523;
+			const target = this.target_def_index ? "-" + this.target_def_index : "";
+			index = fabricator_def_index + "-6" + target;
 		}
 
 		if (index) return String(index);
@@ -560,8 +583,11 @@ export default class Item implements ItemTraits {
 			const that_output = item.output_item;
 			if (Boolean(this_output) != Boolean(that_output)) return false;
 			if (this_output != undefined) {
-				if (this_output.def_index != that_output!.def_index || this_output.quality != that_output!.quality) return false;
-				if (this_output.item && !this_output.item.equal(that_output!.item!)) return false;
+				if (this_output.def_index !== undefined) {
+					if (this_output.def_index != that_output!.def_index || this_output.quality != that_output!.quality) return false;
+				} else {
+					if (!this_output.item!.equal(that_output!.item!)) return false;
+				}
 			}
 		}
 
