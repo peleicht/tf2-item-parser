@@ -250,6 +250,9 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 		}
 	}
 
+	const quality_tag = econ_item.tags?.find(tag => tag.category == "Quality");
+	if (quality_tag?.internal_name == "Normal") traits.quality = EItemQuality.Normal; // normal quality is not in the name
+
 	if (traits.never_tradable === undefined) traits.never_tradable = !traits.tradable;
 
 	const kills_part = traits.strange_parts?.indexOf(87);
