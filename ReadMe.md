@@ -113,11 +113,11 @@ Parses an item from the steam api, node-steam-user and node-steamcommunity.
 
 ### fromTF2(item: TF2Item): Item | undefined
 
-Parses an item from the node-tf2 module and some older backpack.tf api endpoints.
+Parses an item from the node-tf2 module and older backpack.tf api endpoints (including snapshots).
 
 ### fromBPDocument(item: BPDocumentType): Item | undefined
 
-Parses an item from newer backpack.tf api endpoints (snapshot, websocket, v2).
+Parses an item from newer backpack.tf api endpoints (websocket, /v2).
 
 ### fromBPUrl(url: string): Item | undefined
 

@@ -11,9 +11,6 @@ import "dotenv/config";
 
 doTests();
 async function doTests() {
-	const item = Item.fromName("Strange Professional Killstreak Australium Rocket Launcher");
-	const sku = item.toSKU();
-
 	await Item.init(process.env.STEAM_API_KEY);
 	console.log("Initilization of Item Class successfull.\n");
 
