@@ -184,17 +184,16 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 				if (!ks_match && !sheen_match) continue;
 
 				if (ks_match) {
-					if (!traits.output_item) traits.output_item = new Item({ def_index: 5726 });
 					//@ts-ignore
 					traits.killstreaker = EKillstreaker[ks_match[1]];
-					traits.output_item!.item!.killstreaker = traits.killstreaker!;
+					if (traits.output_item?.item) traits.output_item.item.killstreaker = traits.killstreaker!;
 					traits.killstreak = EItemKillstreak["Professional Killstreak"];
 				}
 				if (sheen_match) {
 					const sheen_name = sheen_match[1].length - 1; //remove bracket in text
 					//@ts-ignore
 					traits.killstreak_sheen = EKillstreakSheen[sheen_match[1].substring(0, sheen_name)];
-					traits.output_item!.item!.killstreak_sheen = traits.killstreak_sheen!;
+					if (traits.output_item?.item) traits.output_item.item.killstreak_sheen = traits.killstreak_sheen!;
 					if (!traits.killstreak || traits.killstreak < EItemKillstreak["Specialized Killstreak"]) {
 						traits.killstreak = EItemKillstreak["Specialized Killstreak"];
 					}

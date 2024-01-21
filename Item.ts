@@ -661,10 +661,14 @@ export default class Item implements ItemTraits {
 				const out_item = global_info.parsed_schema[out.def_index]; //cache name in output?
 				final_name += out_item?.item_name;
 			} else {
-				if (out.item!.def_index == 5726) {
-					const out_target_item = global_info.parsed_schema[out.item!.target_def_index!];
-					const out_name = out_target_item?.item_name || ""; //can be unknown in tf2 items
-					final_name += out_name + " " + out.item!.name; //dont show ks or uncraftable in kit fabricator
+				if (out.item?.def_index == 5726) {
+					let output_name = "";
+					if (out.item.target_def_index) {
+						const out_target_item = global_info.parsed_schema[out.item.target_def_index];
+						if (out_target_item) output_name = out_target_item.item_name; //can be unknown in tf2 items, gliched fabricators
+					}
+					if (output_name != "") final_name += output_name + " " + out.item.name; //dont show ks or uncraftable in kit fabricator
+					else final_name += out.item.name;
 				} else final_name += out.item!.toString();
 			}
 		} else if (this.target_def_index) {

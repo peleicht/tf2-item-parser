@@ -217,7 +217,7 @@ function parseKillstreakKit(name: string): ItemTraits | undefined {
 	const out_item = parseName(name);
 	if (!out_item) {
 		// dont stop for gliched kits without target item
-		if (name.endsWith("killstreak")) return;
+		if (!name.endsWith("killstreak")) return;
 	}
 
 	traits.target_def_index = out_item?.def_index;
