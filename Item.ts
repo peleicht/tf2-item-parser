@@ -368,7 +368,7 @@ export default class Item implements ItemTraits {
 	 * Note that the backpack.tf api usually expects a name (use *toString*) when using the sku parameter.
 	 */
 	toSKU() {
-		if (this.def_index === undefined || !this.quality) return;
+		if (this.def_index === undefined || this.quality === undefined) return;
 
 		let sku = this.def_index + ";" + this.quality;
 		if (this.unusual) sku += ";u" + this.unusual;
@@ -387,10 +387,13 @@ export default class Item implements ItemTraits {
 
 		const output = this.output_item;
 		if (output && this.def_index != 5661) {
-			if (output.def_index) sku += ";od-" + output.def_index;
-			else if (output.item) sku += ";od-" + output.item.def_index;
-			if (output.quality) sku += ";oq-" + output.quality;
-			else if (output.item) sku += ";oq-" + output.item.quality;
+			if (output.item) {
+				sku += ";od-" + output.item.def_index;
+				sku += ";oq-" + output.item.quality || 6;
+			} else {
+				sku += ";od-" + output.def_index;
+				sku += ";oq-" + output.quality || 6;
+			}
 		}
 
 		return sku;

@@ -1,3 +1,4 @@
+import Item from "../Item.js";
 import ETraits from "../enums/ETraits.js";
 import { ItemTraits } from "../types/index.js";
 
@@ -9,7 +10,7 @@ export default function parseSKU(sku: string): ItemTraits | undefined {
 	const split_sku = sku.split(";");
 
 	try {
-		traits.def_index = Number(split_sku.shift());
+		traits.def_index = Item.normalizeDefIndex(Number(split_sku.shift()));
 		traits.quality = Number(split_sku.shift());
 		for (let a of split_sku) {
 			if (a.startsWith("u") && a != "uncraftable") {
@@ -42,6 +43,49 @@ export default function parseSKU(sku: string): ItemTraits | undefined {
 		}
 	} catch (err) {
 		return;
+	}
+
+	if (traits.output_item?.def_index) {
+		if (traits.def_index == 20000 && traits.output_item?.def_index != 5661) {
+			// restore output item of chemnistry sets
+			if (traits.output_item.quality == 14) {
+				// collectors sets
+				traits.output_item.item = new Item({
+					def_index: traits.target_def_index,
+					quality: 14,
+				});
+			} else {
+				// strangifier sets
+				traits.output_item.item = new Item({
+					def_index: 5661,
+					name: "Strangifier",
+					needs_the: false,
+					type: "tool",
+					usable: true,
+					remaining_uses: 1,
+					max_uses: 1,
+					target_def_index: traits.target_def_index,
+				});
+			}
+			delete traits.output_item.def_index;
+			delete traits.output_item.quality;
+		} else if (traits.def_index == 20002 && traits.output_item?.def_index != 5726) {
+			// restore output item of fabricator kits
+			traits.output_item.item = new Item({
+				def_index: 5726,
+				name: "Kit",
+				needs_the: false,
+				type: "tool",
+				usable: true,
+				craftable: false,
+				remaining_uses: 1,
+				max_uses: 1,
+				killstreak: traits.killstreak,
+				target_def_index: traits.output_item.def_index,
+			});
+			delete traits.output_item.def_index;
+			delete traits.output_item.quality;
+		}
 	}
 
 	return traits;

@@ -74,6 +74,7 @@ export default [
 			max_uses: 1,
 			remaining_uses: 1,
 			item_number: 2,
+			target_def_index: 878,
 			output_item: {
 				item: {
 					def_index: 5661,

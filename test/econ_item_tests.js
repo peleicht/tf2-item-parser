@@ -908,6 +908,7 @@ export default [
 			max_uses: 1,
 			remaining_uses: 1,
 			item_number: 2,
+			target_def_index: 878,
 			input_items: [
 				"The Family Business",
 				"The Family Business",

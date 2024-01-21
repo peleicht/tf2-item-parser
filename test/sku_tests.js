@@ -58,6 +58,7 @@ export default [
 			max_uses: 1,
 			remaining_uses: 1,
 			item_number: 2,
+			target_def_index: 878,
 			output_item: {
 				item: {
 					def_index: 5661,
@@ -70,7 +71,7 @@ export default [
 				},
 			},
 		},
-		expected_output: "20000;6;n2;od-5661;oq-6",
+		expected_output: "20000;6;td-878;n2;od-5661;oq-6",
 	},
 	{
 		title: "Third Degree Strangifier",

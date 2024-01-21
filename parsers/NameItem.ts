@@ -24,7 +24,8 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 	let cut_name = normalizeName(name);
 
 	// tools that output items need special parsing
-	if (cut_name.endsWith(" strangifier")) return parseStrangifier(cut_name);
+	if (cut_name.endsWith(" carefully wrapped gift")) return parseWrappedGift(cut_name);
+	else if (cut_name.endsWith(" strangifier")) return parseStrangifier(cut_name);
 	else if (cut_name.endsWith("kit") && cut_name.includes("killstreak")) return parseKillstreakKit(cut_name);
 	else if (cut_name.endsWith(" unusualifier")) return parseUnusualifier(cut_name);
 	else if (cut_name.includes(" chemistry set")) return parseChemnistrySet(cut_name);
@@ -177,8 +178,10 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 	return traits;
 }
 
-function parseStrangifier(name: string): ItemTraits | undefined {
+function parseWrappedGift(name: string): ItemTraits | undefined {
 	const traits: ItemTraits = {
+		def_index: 5043,
+		name: "A Carefully Wrapped Gift",
 		needs_the: false,
 		type: "tool",
 		usable: true,
@@ -186,8 +189,30 @@ function parseStrangifier(name: string): ItemTraits | undefined {
 		max_uses: 1,
 	};
 
-	traits.def_index = 5661;
-	traits.name = "Strangifier";
+	name = name.substring(0, name.length - " a carefully wrapped gift".length);
+
+	const out_item = parseName(name);
+	if (!out_item && name != "") return;
+
+	if (out_item) {
+		traits.output_item = {
+			item: new Item(out_item),
+		};
+	}
+
+	return traits;
+}
+function parseStrangifier(name: string): ItemTraits | undefined {
+	const traits: ItemTraits = {
+		def_index: 5661,
+		name: "Strangifier",
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
 	name = name.substring(0, name.length - " strangifier".length);
 
 	const out_item = parseName(name);
@@ -203,6 +228,8 @@ function parseStrangifier(name: string): ItemTraits | undefined {
 }
 function parseKillstreakKit(name: string): ItemTraits | undefined {
 	const traits: ItemTraits = {
+		def_index: 5726,
+		name: "Kit",
 		needs_the: false,
 		type: "tool",
 		usable: true,
@@ -210,8 +237,6 @@ function parseKillstreakKit(name: string): ItemTraits | undefined {
 		max_uses: 1,
 	};
 
-	traits.def_index = 5726;
-	traits.name = "Kit";
 	name = name.substring(0, name.length - " kit".length);
 
 	const out_item = parseName(name);
@@ -226,6 +251,8 @@ function parseKillstreakKit(name: string): ItemTraits | undefined {
 }
 function parseUnusualifier(name: string): ItemTraits | undefined {
 	const traits: ItemTraits = {
+		def_index: 9258,
+		name: "Unusualifier",
 		needs_the: false,
 		type: "tool",
 		usable: true,
@@ -233,8 +260,6 @@ function parseUnusualifier(name: string): ItemTraits | undefined {
 		max_uses: 1,
 	};
 
-	traits.def_index = 9258;
-	traits.name = "Unusualifier";
 	name = name.substring(0, name.length - " unusualifier".length);
 
 	const out_item = parseName(name);
@@ -246,6 +271,8 @@ function parseUnusualifier(name: string): ItemTraits | undefined {
 }
 function parseChemnistrySet(name: string): ItemTraits | undefined {
 	const traits: ItemTraits = {
+		def_index: 20000,
+		name: "Chemistry Set",
 		needs_the: false,
 		type: "tool",
 		usable: true,
@@ -253,8 +280,6 @@ function parseChemnistrySet(name: string): ItemTraits | undefined {
 		max_uses: 1,
 	};
 
-	traits.def_index = 20000;
-	traits.name = "Chemistry Set";
 	name = name.replace(" strangifier", ""); //optional (can be strangifier or collectors/none)
 	name = name.replace(" chemistry set", "");
 	name = name.replace(" series", ""); //optional (backpack doesnt show)
@@ -263,7 +288,7 @@ function parseChemnistrySet(name: string): ItemTraits | undefined {
 	if (!out_item) return;
 
 	// can be collectors or strangifier chemistry set
-	if (traits.quality == 14) {
+	if (out_item.quality == 14) {
 		traits.output_item = {
 			item: new Item(out_item),
 		};
@@ -279,10 +304,14 @@ function parseChemnistrySet(name: string): ItemTraits | undefined {
 		};
 	}
 
+	traits.target_def_index = out_item.def_index;
+
 	return Object.assign(out_item, traits);
 }
 function parseKitFabricator(name: string): ItemTraits {
 	const traits: ItemTraits = {
+		def_index: 20002,
+		name: "Kit Fabricator",
 		needs_the: false,
 		type: "tool",
 		usable: true,
@@ -290,15 +319,9 @@ function parseKitFabricator(name: string): ItemTraits {
 		max_uses: 1,
 	};
 
-	traits.def_index = 20002;
-	traits.name = "Fabricator";
 	name = name.substring(0, name.length - " fabricator".length);
 
-	let ks = EItemKillstreak.Killstreak;
-	if (name.includes("specialized killstreak")) ks = EItemKillstreak["Specialized Killstreak"];
-	else if (name.includes("professional killstreak")) ks = EItemKillstreak["Professional Killstreak"];
-
-	const out_item = parseName(name);
+	const out_item = parseKillstreakKit(name);
 	if (!out_item) return traits;
 
 	traits.output_item = {

@@ -81,10 +81,10 @@ Create with _Item.fromX_. Compare with _.equal(item)_. Convert with _.toX_.
 - _item_number?_: The item's item number. Meaning depends on the item's type, one of: craft number, crate number, chemistry set series, medal number
 - _target_def_index?_: def_index of item that this can be used on (for killstreak kits, strangifiers, etc)
 - _input_items?_: List of items (as strings) that are required to craft this item.
-- _output_item?_: Item received when crafting this item. Specifies .def_index and .quality for Strangifiers. Specifies .item for Chemistry Sets and Kit Fabricators.
+- _output_item?_: Item received when crafting this item. Specifies .def_index and .quality for Strangifiers. Specifies .item for Chemistry Sets, Kit Fabricators and Wrapped Gifts.
   - _def_index?_: The item's definition index.
   - _quality?_: number. The item's quality as a number (see EItemQuality).
-  - _item?_: The item received when crafting this item.
+  - _item?_: A Item instance indicating the item received when using this item.
 - _type_: The item's type (see ItemType).
 - _needs_the_: Whether the item needs "The" in front of its name.
 - _never_tradable_: Whether the item is never tradable (as opposed to not currently tradable).
