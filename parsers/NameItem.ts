@@ -23,35 +23,17 @@ const trait_maps = {
 export default function parseName(name: string, strict = false): ItemTraits | undefined {
 	let cut_name = normalizeName(name);
 
-	const traits: ItemTraits = {};
-
-	if (cut_name.endsWith(" strangifier")) {
-		traits.def_index = 5661;
-		traits.name = "Strangifier";
-		cut_name = cut_name.substring(0, cut_name.length - " strangifier".length);
-	} else if (cut_name.endsWith("kit") && cut_name.includes("killstreak")) {
-		traits.def_index = 5726;
-		traits.name = "Kit";
-		cut_name = cut_name.substring(0, cut_name.length - " kit".length);
-	} else if (cut_name.endsWith(" unusualifier")) {
-		traits.def_index = 9258;
-		traits.name = "Unusualifier";
-		cut_name = cut_name.substring(0, cut_name.length - " unusualifier".length);
-	} else if (cut_name.includes(" chemistry set")) {
-		traits.def_index = 20000;
-		traits.name = "Chemistry Set";
-		cut_name = cut_name.replace(" strangifier", ""); //optional (can be strangifier or collectors/none)
-		cut_name = cut_name.replace(" chemistry set", "");
-		cut_name = cut_name.replace(" series", ""); //optional (backpack doesnt show)
-	} else if (cut_name.endsWith(" kit fabricator")) {
-		traits.def_index = 20002;
-		traits.name = "Fabricator";
-		cut_name = cut_name.substring(0, cut_name.length - " kit fabricator".length);
-	}
+	// tools that output items need special parsing
+	if (cut_name.endsWith(" strangifier")) return parseStrangifier(cut_name);
+	else if (cut_name.endsWith("kit") && cut_name.includes("killstreak")) return parseKillstreakKit(cut_name);
+	else if (cut_name.endsWith(" unusualifier")) return parseUnusualifier(cut_name);
+	else if (cut_name.includes(" chemistry set")) return parseChemnistrySet(cut_name);
+	else if (cut_name.endsWith(" kit fabricator")) return parseKitFabricator(cut_name);
 
 	let from_name = undefined;
 	let removed_something = true;
 
+	const traits: ItemTraits = {};
 	while (true) {
 		from_name = getSchemaItemByName(cut_name);
 		if (from_name != undefined || cut_name == "") break;
@@ -187,67 +169,144 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 
 	if (!from_name) return;
 
-	if (traits.def_index === undefined) {
-		traits.name = from_name.item_name;
-		traits.needs_the = from_name.proper_name;
-		traits.def_index = from_name.def_index;
-		traits.img = from_name.img;
-	} else {
-		//item is special recipe item as defined above
-		if (traits.def_index == 20000) {
-			//collectors/strangifier chemistry set
-			if (traits.quality == 14) {
-				traits.output_item = {
-					item: new Item({
-						def_index: from_name.def_index,
-						quality: 14,
-						name: from_name.item_name,
-						needs_the: from_name.proper_name,
-					}),
-				};
-				traits.quality = 6;
-			} else {
-				traits.output_item = {
-					item: new Item({
-						def_index: 5661,
-						quality: 6,
-						name: "Strangifier",
-						target_def_index: from_name.def_index,
-					}),
-				};
-			}
-		} else {
-			traits.target_def_index = from_name.def_index;
-		}
-		if (traits.def_index == 5661) {
-			//strangifier
-			traits.output_item = {
-				def_index: traits.target_def_index,
-				quality: 11,
-			};
-		}
-		if (traits.def_index == 20002) {
-			//killstreak kit fabricator
-			traits.output_item = {
-				item: new Item({
-					def_index: 5726,
-					quality: 6,
-					name: "Kit",
-					craftable: false,
-					killstreak: traits.killstreak,
-					target_def_index: from_name.def_index,
-				}),
-			};
-		}
-
-		traits.needs_the = false;
-		traits.type = "tool";
-		traits.usable = true;
-		traits.remaining_uses = 1;
-		traits.max_uses = 1;
-	}
+	traits.name = from_name.item_name;
+	traits.needs_the = from_name.proper_name;
+	traits.def_index = from_name.def_index;
+	traits.img = from_name.img;
 
 	return traits;
+}
+
+function parseStrangifier(name: string): ItemTraits | undefined {
+	const traits: ItemTraits = {
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
+	traits.def_index = 5661;
+	traits.name = "Strangifier";
+	name = name.substring(0, name.length - " strangifier".length);
+
+	const out_item = parseName(name);
+	if (!out_item) return;
+
+	traits.output_item = {
+		def_index: out_item.def_index,
+		quality: 11,
+	};
+	traits.target_def_index = out_item.def_index;
+
+	return Object.assign(out_item, traits);
+}
+function parseKillstreakKit(name: string): ItemTraits | undefined {
+	const traits: ItemTraits = {
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
+	traits.def_index = 5726;
+	traits.name = "Kit";
+	name = name.substring(0, name.length - " kit".length);
+
+	const out_item = parseName(name);
+	if (!out_item) {
+		// dont stop for gliched kits without target item
+		if (name.endsWith("killstreak")) return;
+	}
+
+	traits.target_def_index = out_item?.def_index;
+
+	return out_item ? Object.assign(out_item, traits) : traits;
+}
+function parseUnusualifier(name: string): ItemTraits | undefined {
+	const traits: ItemTraits = {
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
+	traits.def_index = 9258;
+	traits.name = "Unusualifier";
+	name = name.substring(0, name.length - " unusualifier".length);
+
+	const out_item = parseName(name);
+	if (!out_item) return;
+
+	traits.target_def_index = out_item.def_index;
+
+	return Object.assign(out_item, traits);
+}
+function parseChemnistrySet(name: string): ItemTraits | undefined {
+	const traits: ItemTraits = {
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
+	traits.def_index = 20000;
+	traits.name = "Chemistry Set";
+	name = name.replace(" strangifier", ""); //optional (can be strangifier or collectors/none)
+	name = name.replace(" chemistry set", "");
+	name = name.replace(" series", ""); //optional (backpack doesnt show)
+
+	const out_item = parseName(name);
+	if (!out_item) return;
+
+	// can be collectors or strangifier chemistry set
+	if (traits.quality == 14) {
+		traits.output_item = {
+			item: new Item(out_item),
+		};
+		traits.quality = 6;
+	} else {
+		traits.output_item = {
+			item: new Item({
+				def_index: 5661,
+				quality: 6,
+				name: "Strangifier",
+				target_def_index: out_item.def_index,
+			}),
+		};
+	}
+
+	return Object.assign(out_item, traits);
+}
+function parseKitFabricator(name: string): ItemTraits {
+	const traits: ItemTraits = {
+		needs_the: false,
+		type: "tool",
+		usable: true,
+		remaining_uses: 1,
+		max_uses: 1,
+	};
+
+	traits.def_index = 20002;
+	traits.name = "Fabricator";
+	name = name.substring(0, name.length - " fabricator".length);
+
+	let ks = EItemKillstreak.Killstreak;
+	if (name.includes("specialized killstreak")) ks = EItemKillstreak["Specialized Killstreak"];
+	else if (name.includes("professional killstreak")) ks = EItemKillstreak["Professional Killstreak"];
+
+	const out_item = parseName(name);
+	if (!out_item) return traits;
+
+	traits.output_item = {
+		item: new Item(out_item),
+	};
+	traits.output_item.item!.craftable = false;
+
+	return out_item ? Object.assign(out_item, traits) : traits;
 }
 
 function scanFor(name: string, trait: "quality" | "unusual" | "texture" | "wear"): number | undefined {

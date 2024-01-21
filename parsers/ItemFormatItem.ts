@@ -1,6 +1,7 @@
 import EItemKillstreak from "../enums/EItemKillstreak.js";
 import EItemWear from "../enums/EItemWear.js";
 import ETraits from "../enums/ETraits.js";
+import EStrangeParts from "../enums/EStrangeParts.js";
 import Item from "../Item.js";
 import { Enum, ItemTraits } from "../types/index.js";
 
@@ -13,7 +14,6 @@ import EItemQuality from "../enums/EItemQuality.js";
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const ETextures = importJSON("/enums/ETextures.json") as Enum;
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
-const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 
 /**
  * Limitations: remaining_uses, input_items, tradable, never_tradable, custom_texture, anything tf2-item-format isnt parsing right (garbage in, garbage out)
@@ -78,7 +78,9 @@ export default function parseItemFormatItem(item: AllFormatAttributes): ItemTrai
 	if (item.parts !== undefined) {
 		traits.strange_parts = [];
 		for (let part of item.parts) {
-			traits.strange_parts.push(EStrangeParts[part] as number);
+			//@ts-ignore
+			const parsed_part = EStrangeParts[part] as number | undefined;
+			if (parsed_part) traits.strange_parts.push(parsed_part);
 		}
 	}
 

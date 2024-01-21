@@ -9,6 +9,7 @@ enum EItemQuality {
 	Community = 7,
 	Valve = 8,
 	SelfMade = 9,
+	"Self Made" = 9,
 	UNUSED_CUSTOMIZED = 10,
 	Strange = 11,
 	UNUSED_COMPLETED = 12,

@@ -12,6 +12,6 @@
 		"outDir": "dist",
 		"allowJs": true
 	},
-	"include": ["**/*.ts", "enums/EStrangeParts"],
+	"include": ["**/*.ts"],
 	"exclude": ["node_modules", "dist", "test", "types/node-tf2-item-format"]
 }

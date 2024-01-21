@@ -1,6 +1,7 @@
 import EItemKillstreak from "../enums/EItemKillstreak.js";
 import EItemQuality from "../enums/EItemQuality.js";
 import ETraits from "../enums/ETraits.js";
+import EStrangeParts from "../enums/EStrangeParts.js";
 import { Enum, ItemTraits, item_traits } from "../types/index.js";
 
 import importJSON from "../types/importJSON.js";
@@ -11,7 +12,6 @@ import ESpells from "../enums/ESpells.js";
 import default_traits from "../data/default_traits.js";
 import Item from "../Item.js";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
-const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 
 const from_name_traits: ETraits[] = [
@@ -98,7 +98,8 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 				const part_match = desc.value.match(/^\((.*): 0\)$/);
 				if (part_match) {
 					if (!traits.strange_parts) traits.strange_parts = [];
-					const part = EStrangeParts[part_match[1]] as number;
+					//@ts-ignore
+					const part = EStrangeParts[part_match[1]] as number | undefined;
 					if (part) traits.strange_parts.push(part);
 					if (descs.length == 0) break;
 				} else {

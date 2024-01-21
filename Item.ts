@@ -11,6 +11,7 @@ import EKillstreaker from "./enums/EKillstreaker.js";
 import EKillstreakSheen from "./enums/EKillstreakSheen.js";
 import ESpells from "./enums/ESpells.js";
 import ETraits from "./enums/ETraits.js";
+import EStrangeParts from "./enums/EStrangeParts.js";
 
 import importJSON from "./types/importJSON.js";
 import {
@@ -31,7 +32,6 @@ import parseBPURLItem from "./parsers/BPURLItem.js";
 import parseItemFormatItem from "./parsers/ItemFormatItem.js";
 import { Schema } from "@peleicht/tf2-schema";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
-const EStrangeParts = importJSON("/enums/EStrangeParts.json") as Enum;
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const _ETextures = importJSON("/enums/ETextures.json") as Enum;
 const _parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
