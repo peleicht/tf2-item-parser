@@ -422,7 +422,9 @@ export default class Item implements ItemTraits {
 	 * Obtains the URL to the item on backpack.tf.
 	 */
 	toBPURL() {
-		let url = "https://backpack.tf/stats/" + EItemQuality[this.quality!] + "/" + this.toBPName();
+		let quality = EItemQuality[this.quality!];
+		if (this.strange && this.quality != EItemQuality.Strange) quality = "Strange " + quality;
+		let url = "https://backpack.tf/stats/" + quality + "/" + this.toBPName();
 		const t = this.tradable ? "/Tradable" : "/Non-Tradable";
 		const c = this.craftable ? "/Craftable" : "/Non-Craftable";
 		url += t + c + "/" + (this.getBPPriceIndex(false) || "");
@@ -502,7 +504,7 @@ export default class Item implements ItemTraits {
 	private toBPName() {
 		let final_name = this.name;
 		if (this.australium) final_name = "Australium " + final_name;
-		if (this.texture) final_name = global_info.ETextures[this.texture] + " " + final_name;
+		if (this.texture) final_name = global_info.ETextures[this.texture] + " | " + final_name;
 		if (this.killstreak) final_name = EItemKillstreak[this.killstreak] + " " + final_name;
 		if (this.festivized) final_name = "Festivized " + final_name;
 		if (this.wear) final_name += " (" + EItemWear[this.wear] + ")";
