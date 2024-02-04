@@ -87,6 +87,7 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 			if (traits.quality == EItemQuality.Strange) traits.strange = true;
 			cut_name = cut_name.substring(length);
 			if (traits.quality == EItemQuality.Unusual) cut_name = normalizeName(cut_name); //the/taunt may be after this
+			continue; //recheck cut_name, unusual before texture
 		}
 		if (traits.festivized === undefined && cut_name.startsWith("festivized ")) {
 			traits.festivized = true;
