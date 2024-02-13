@@ -389,10 +389,10 @@ export default class Item implements ItemTraits {
 		if (output && this.def_index != 5661) {
 			if (output.item) {
 				sku += ";od-" + output.item.def_index;
-				sku += ";oq-" + output.item.quality || 6;
+				sku += ";oq-" + (output.item.quality || 6);
 			} else {
 				sku += ";od-" + output.def_index;
-				sku += ";oq-" + output.quality || 6;
+				sku += ";oq-" + (output.quality || 6);
 			}
 		}
 

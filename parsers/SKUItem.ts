@@ -69,8 +69,8 @@ export default function parseSKU(sku: string): ItemTraits | undefined {
 			}
 			delete traits.output_item.def_index;
 			delete traits.output_item.quality;
-		} else if (traits.def_index == 20002 && traits.output_item?.def_index != 5726) {
-			// restore output item of fabricator kits
+		} else if (traits.def_index == 20002) {
+			// restore output item of kit fabricators
 			traits.output_item.item = new Item({
 				def_index: 5726,
 				name: "Kit",
@@ -81,7 +81,7 @@ export default function parseSKU(sku: string): ItemTraits | undefined {
 				remaining_uses: 1,
 				max_uses: 1,
 				killstreak: traits.killstreak,
-				target_def_index: traits.output_item.def_index,
+				target_def_index: traits.target_def_index,
 			});
 			delete traits.output_item.def_index;
 			delete traits.output_item.quality;

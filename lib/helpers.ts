@@ -29,8 +29,12 @@ export async function makeSchema(steam_api_key: string): Promise<Schema> {
 		console.log("SchemaManager init failed: " + err);
 
 		//use backup schema
-		const schema = importJSON("/data/schema.json");
-		schemaManager.setSchema(schema, false);
+		try {
+			const schema = importJSON("/data/schema.json");
+			schemaManager.setSchema(schema, false);
+		} catch (err) {
+			throw "Missing backup schema, exiting.";
+		}
 	}
 
 	return schemaManager.schema!;
