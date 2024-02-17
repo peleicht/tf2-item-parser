@@ -89,6 +89,7 @@ export default class Item implements ItemTraits {
 	max_uses?: number;
 	remaining_uses?: number;
 
+	level?: number;
 	item_number?: number;
 	target_def_index?: number;
 	input_items?: string[];
@@ -161,6 +162,7 @@ export default class Item implements ItemTraits {
 			this.remaining_uses = remaining_uses;
 		}
 
+		this.level = traits.level;
 		this.item_number = traits.item_number;
 		this.target_def_index = Item.normalizeDefIndex(traits.target_def_index);
 		this.input_items = traits.input_items;

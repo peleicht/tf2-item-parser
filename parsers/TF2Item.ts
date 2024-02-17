@@ -21,7 +21,7 @@ const from_name_traits: ETraits[] = [
 ];
 
 /**
- * Limitations: never_tradable, input_items & fabricator outputs when from bpapi)
+ * Limitations: never_tradable, input_items & fabricator outputs (when from bpapi)
  */
 export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefined {
 	const traits: ItemTraits = {};
@@ -29,7 +29,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 	let name_item: Item | undefined = undefined;
 
 	//bp api delivers with defindex instead of def_index and differently formatted attributes
-	if (tf2_item.defindex !== undefined) {
+	if ("defindex" in tf2_item) {
 		is_bp_api_item = true;
 		tf2_item.def_index = tf2_item.defindex;
 		delete tf2_item.defindex;
@@ -134,6 +134,8 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		if (usable && tf2_item.quantity !== undefined) traits.remaining_uses = tf2_item.quantity;
 		else traits.remaining_uses = remaining_uses;
 
+		if (tf2_item !== undefined) traits.level = tf2_item.level;
+
 		traits.item_number = parsed_item.craft || parsed_item.crateNo || parsed_item.series || parsed_item.medalNo;
 		if (!name_item) traits.target_def_index = parsed_item.target; //use name item if available, bpapi buy orders use wrong def_index
 
@@ -174,7 +176,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 		} else if (traits.def_index == 5726) {
 			if (!traits.killstreak) traits.killstreak = 1;
 		}
-		if (tf2_item.contained_item) {
+		if ("contained_item" in tf2_item && tf2_item.contained_item) {
 			if (!traits.output_item) traits.output_item = {};
 			traits.output_item.item = Item.fromTF2(tf2_item.contained_item);
 		}

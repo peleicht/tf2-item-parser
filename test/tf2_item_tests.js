@@ -89,6 +89,7 @@ export default [
 			killstreak_sheen: 1,
 			australium: true,
 			strange_parts: [33],
+			level: 1,
 		},
 	},
 	{
@@ -172,6 +173,7 @@ export default [
 			texture: 72,
 			wear: 4,
 			strange: true,
+			level: 1,
 		},
 	},
 	{
@@ -206,6 +208,7 @@ export default [
 			usable: true,
 			max_uses: 25,
 			remaining_uses: 18,
+			level: 5,
 		},
 	},
 	{
@@ -247,6 +250,7 @@ export default [
 			name: "Taunt: The Skating Scorcher",
 			id: "12507393115",
 			unusual: 3007,
+			level: 96,
 		},
 	},
 	{
@@ -292,6 +296,7 @@ export default [
 			max_uses: 1,
 			remaining_uses: 1,
 			target_def_index: 1182,
+			level: 5,
 		},
 	},
 	{
@@ -340,6 +345,7 @@ export default [
 				def_index: 593,
 				quality: 11,
 			},
+			level: 5,
 		},
 	},
 	{
@@ -394,6 +400,7 @@ export default [
 			name: "Patriot Peak",
 			id: "8621939024",
 			paint: 10,
+			level: 42,
 		},
 	},
 	{
@@ -435,6 +442,7 @@ export default [
 			name: "Sandman",
 			id: "11508815507",
 			spells: [14],
+			level: 15,
 		},
 	},
 	{
@@ -476,6 +484,7 @@ export default [
 			name: "Nice Winter Crate 2014",
 			id: "8621938857",
 			item_number: 89,
+			level: 13,
 		},
 	},
 	{
@@ -511,6 +520,7 @@ export default [
 			usable: true,
 			max_uses: 1,
 			remaining_uses: 1,
+			level: 1,
 		},
 	},
 	{
@@ -556,6 +566,7 @@ export default [
 			usable: true,
 			max_uses: 1,
 			remaining_uses: 1,
+			level: 99,
 		},
 	},
 	{
@@ -617,6 +628,7 @@ export default [
 			killstreak_sheen: 2,
 			tradable: true,
 			target_def_index: 30667,
+			level: 5,
 		},
 	},
 ];

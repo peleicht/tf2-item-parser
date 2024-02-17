@@ -21,6 +21,7 @@ enum ETraits {
 	usable,
 	max_uses,
 	remaining_uses,
+	level,
 	item_number,
 	target_def_index,
 	input_items,

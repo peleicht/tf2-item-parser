@@ -55,14 +55,27 @@ type EconTag = {
  */
 export interface TF2ItemType {
 	id: string;
+	/**
+	 * Only on items from bp api, use def_index for tf2 api
+	 */
 	defindex?: number;
+	/**
+	 * Only on items from bp api, use quality for tf2 api
+	 */
 	def_index?: number;
+	level?: number;
 	quality: number;
 	flag_cannot_craft?: boolean;
 	quantity: number;
 	attribute?: TF2Attribute[];
 	attributes?: TF2Attribute[];
-	contained_item?: TF2ItemType; //following only on items from bp api
+	/**
+	 * Only on items from bp api
+	 */
+	contained_item?: TF2ItemType;
+	/**
+	 * Only on items from bp api
+	 */
 	name?: string;
 }
 interface TF2Attribute {
@@ -84,13 +97,14 @@ export type AllFormatAttributes = EitherOrBoth<ItemAttributes, ParsedEconItem>;
  * Type for items from newer backpack.tf api endpoints (snapshot, v2).
  */
 export interface BPDocumentType {
-	appid?: 440;
+	appid?: number;
 	baseName: string;
 	defindex?: number;
 	id?: string;
-	name: string;
 	imageUrl: string;
 	marketName?: string;
+	name: string;
+	origin?: BPDocumentEntity;
 	originalId?: string;
 	craftable?: boolean;
 	tradable?: boolean;
@@ -103,6 +117,8 @@ export interface BPDocumentType {
 	festivized?: boolean;
 	quantity: number;
 	quality: BPDocumentEntity;
+	summary: string;
+	level?: number;
 	rarity: BPDocumentEntity;
 	paint: BPDocumentEntity;
 	particle: BPDocumentEntity;

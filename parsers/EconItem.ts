@@ -55,6 +55,9 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 		if (that_value !== undefined && this_value === undefined && default_traits[key] != that_value) traits[key] = name_item[key] as any;
 	}
 
+	const level_match = econ_item.type.match(/Level (\d+)/);
+	if (level_match !== null) traits.level = Number(level_match[1]);
+
 	const descs = econ_item.descriptions?.slice();
 	if (descs != undefined) {
 		let inside_block: ETraits | undefined = undefined;

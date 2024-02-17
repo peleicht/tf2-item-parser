@@ -84,6 +84,8 @@ export default function parseItemFormatItem(item: AllFormatAttributes): ItemTrai
 		}
 	}
 
+	traits.level = item.level;
+
 	if (item.itemNumber) traits.item_number = item.itemNumber.value;
 	if (item.targetDefindex && traits.def_index != 20000) traits.target_def_index = item.targetDefindex;
 

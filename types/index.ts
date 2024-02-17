@@ -65,6 +65,7 @@ export interface ItemTraits {
 	max_uses?: number;
 	remaining_uses?: number;
 
+	level?: number;
 	/**
 	 * Possible values: craft number, crate number, chemistry set series, medal number
 	 */
@@ -126,6 +127,7 @@ export const item_traits = [
 	"usable",
 	"max_uses",
 	"remaining_uses",
+	"level",
 	"item_number",
 	"target_def_index",
 	"input_items",

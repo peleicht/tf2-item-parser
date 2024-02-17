@@ -92,6 +92,7 @@ export default [
 			killstreak_sheen: 4,
 			killstreaker: 2004,
 			strange_parts: [82, 15, 94],
+			level: 5,
 		},
 	},
 	{
@@ -184,6 +185,7 @@ export default [
 			texture: 72,
 			wear: 4,
 			strange: true,
+			level: 1,
 		},
 	},
 	{
@@ -214,6 +216,7 @@ export default [
 			usable: true,
 			max_uses: 25,
 			remaining_uses: 18,
+			level: 5,
 		},
 	},
 	{
@@ -286,6 +289,7 @@ export default [
 			name: "Taunt: The Scooty Scoot",
 			id: "12416304568",
 			unusual: 3043,
+			level: 15,
 		},
 	},
 	{
@@ -385,6 +389,7 @@ export default [
 					max_uses: 1,
 					remaining_uses: 1,
 					target_def_index: 336,
+					level: 5,
 				},
 			},
 		},
@@ -420,6 +425,7 @@ export default [
 				def_index: 441,
 				quality: 11,
 			},
+			level: 5,
 		},
 	},
 	{
@@ -480,6 +486,7 @@ export default [
 			name: "Patriot Peak",
 			id: "8621939024",
 			paint: 10,
+			level: 42,
 		},
 	},
 	{
@@ -528,6 +535,7 @@ export default [
 			name: "Sandman",
 			id: "11508815507",
 			spells: [14],
+			level: 15,
 		},
 	},
 	{
@@ -561,6 +569,7 @@ export default [
 			name: "Nice Winter Crate 2014",
 			id: "8621938857",
 			item_number: 89,
+			level: 13,
 		},
 	},
 	{
@@ -601,6 +610,7 @@ export default [
 			usable: true,
 			max_uses: 1,
 			remaining_uses: 1,
+			level: 1,
 		},
 	},
 	{
@@ -667,6 +677,7 @@ export default [
 			usable: true,
 			max_uses: 1,
 			remaining_uses: 1,
+			level: 99,
 		},
 	},
 	{
@@ -724,6 +735,7 @@ export default [
 					tradable: false,
 				},
 			},
+			level: 5,
 		},
 	},
 	{
@@ -845,6 +857,7 @@ export default [
 					target_def_index: 61,
 				},
 			},
+			level: 14,
 		},
 	},
 ];

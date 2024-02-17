@@ -73,6 +73,7 @@ export default function parseBPDocument(item: BPDocumentType): ItemTraits | unde
 	if (usable && item.quantity) traits.remaining_uses = Number(item.quantity);
 	else traits.remaining_uses = remaining_uses;
 
+	if (item.level !== undefined) traits.level = item.level;
 	traits.item_number = item.crateSeries;
 
 	if (item.recipe && item.recipe.targetItem) {
