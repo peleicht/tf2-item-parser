@@ -1,6 +1,6 @@
 # TF2 Item Parser
 
-Simple-to-use parser for TF2 items. Fully typed and lighting fast.
+Simple-to-use parser for TF2 items. Fully typed and lightning fast.
 
 Provides a unified interface for items, which allows parsing from and to largely any format you might come across:
 
