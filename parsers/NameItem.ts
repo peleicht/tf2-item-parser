@@ -312,7 +312,7 @@ function parseChemnistrySet(name: string): ItemTraits | undefined {
 function parseKitFabricator(name: string): ItemTraits {
 	const traits: ItemTraits = {
 		def_index: 20002,
-		name: "Kit Fabricator",
+		name: "Fabricator",
 		needs_the: false,
 		type: "tool",
 		usable: true,

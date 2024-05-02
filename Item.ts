@@ -119,7 +119,7 @@ export default class Item implements ItemTraits {
 		//@ts-ignore
 		this.needs_the = traits.needs_the;
 		this.img = traits.img;
-		if (this.def_index == undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
+		if (this.def_index === undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
 			let schema_item;
 			if (this.def_index != -2) schema_item = Item.getSchemaItem(this.def_index);
 			else if (this.name != "") schema_item = Item.getSchemaItem(undefined, this.name);
@@ -151,7 +151,7 @@ export default class Item implements ItemTraits {
 		this.spells = traits.spells !== undefined ? traits.spells : default_traits.spells;
 		this.strange_parts = traits.strange_parts !== undefined ? traits.strange_parts : default_traits.strange_parts;
 
-		if (traits.usable) {
+		if (traits.usable !== undefined) {
 			this.usable = traits.usable;
 			this.max_uses = traits.max_uses;
 			this.remaining_uses = traits.remaining_uses;
