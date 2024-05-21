@@ -120,7 +120,7 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 		}
 		if (traits.texture === undefined) {
 			const texture_check = scanFor(cut_name, "texture");
-			if (texture_check) {
+			if (texture_check !== undefined) {
 				traits.quality = EItemQuality["Decorated Weapon"];
 				traits.texture = texture_check;
 				const texture_i = trait_maps.texture_ids.findIndex(id => id == texture_check)!;

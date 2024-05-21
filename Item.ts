@@ -77,7 +77,7 @@ export default class Item implements ItemTraits {
 	australium: boolean;
 	festivized: boolean;
 	unusual: number;
-	texture: number;
+	texture: number | undefined;
 	wear: number;
 	strange: boolean;
 
@@ -143,7 +143,7 @@ export default class Item implements ItemTraits {
 		this.australium = traits.australium !== undefined ? traits.australium : default_traits.australium;
 		this.festivized = traits.festivized !== undefined ? traits.festivized : default_traits.festivized;
 		this.unusual = traits.unusual !== undefined ? traits.unusual : default_traits.unusual;
-		this.texture = traits.texture !== undefined ? traits.texture : default_traits.texture;
+		this.texture = traits.texture;
 		this.wear = traits.wear !== undefined ? traits.wear : default_traits.wear;
 		this.strange = traits.strange !== undefined ? traits.strange : default_traits.strange;
 		this.tradable = traits.tradable !== undefined ? traits.tradable : default_traits.tradable;
@@ -175,7 +175,7 @@ export default class Item implements ItemTraits {
 
 		if (this.australium) this.quality = EItemQuality.Strange;
 		if (this.quality == EItemQuality.Strange) this.strange = true;
-		if (this.texture || this.wear) this.quality = EItemQuality["Decorated Weapon"];
+		if (this.texture !== undefined || this.wear) this.quality = EItemQuality["Decorated Weapon"];
 		else if (this.unusual) this.quality = EItemQuality.Unusual;
 		if (this.never_tradable) this.tradable = false;
 	}
@@ -377,7 +377,7 @@ export default class Item implements ItemTraits {
 		if (this.australium) sku += ";australium";
 		if (!this.craftable) sku += ";uncraftable";
 		if (this.wear) sku += ";w" + this.wear;
-		if (this.texture) sku += ";pk" + this.texture;
+		if (this.texture !== undefined) sku += ";pk" + this.texture;
 		if (this.strange && this.quality != 11) sku += ";strange";
 		if (this.killstreak) sku += ";kt-" + this.killstreak;
 		if (this.target_def_index) sku += ";td-" + this.target_def_index;
@@ -455,7 +455,7 @@ export default class Item implements ItemTraits {
 			quantity: this.usable ? this.remaining_uses : undefined,
 			paint: this.paint ? { id: this.paint } : undefined,
 			particle: this.unusual ? { id: this.unusual } : undefined,
-			texture: this.texture ? { id: this.texture } : undefined,
+			texture: this.texture !== undefined ? { id: this.texture } : undefined,
 			wearTier: this.wear ? { id: this.wear } : undefined,
 			elevatedQuality: this.strange && this.quality != 11 ? { id: 11 } : undefined,
 			spells: this.spells.map(s => {
@@ -509,7 +509,7 @@ export default class Item implements ItemTraits {
 	private toBPName() {
 		let final_name = this.name;
 		if (this.australium) final_name = "Australium " + final_name;
-		if (this.texture) final_name = global_info.ETextures[this.texture] + " | " + final_name;
+		if (this.texture !== undefined) final_name = global_info.ETextures[this.texture] + " | " + final_name;
 		if (this.killstreak) final_name = EItemKillstreak[this.killstreak] + " " + final_name;
 		if (this.festivized) final_name = "Festivized " + final_name;
 		if (this.wear) final_name += " (" + EItemWear[this.wear] + ")";
@@ -658,7 +658,7 @@ export default class Item implements ItemTraits {
 		if (this.unusual) final_name += global_info.EUnusualEffects[String(this.unusual)] + " ";
 		if (this.festivized) final_name += "Festivized ";
 		if (this.killstreak) final_name += EItemKillstreak[this.killstreak] + " ";
-		if (this.texture) final_name += global_info.ETextures[this.texture] + " ";
+		if (this.texture !== undefined) final_name += global_info.ETextures[this.texture] + " ";
 		if (this.australium) final_name += "Australium ";
 		const out = this.output_item;
 		if (out) {

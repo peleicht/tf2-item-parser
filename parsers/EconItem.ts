@@ -34,7 +34,7 @@ const from_name_traits: ETraits[] = [
 ];
 
 /**
- * Limitations: custom texture
+ * Limitations: custom decal
  */
 export default function parseEconItem(econ_item: EconItemType): ItemTraits | undefined {
 	const traits: ItemTraits = {};

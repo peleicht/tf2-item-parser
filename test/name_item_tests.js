@@ -169,4 +169,16 @@ export default [
 			},
 		},
 	},
+	{
+		input: "Red Rock Roscoe Pistol (Factory New)",
+		expected_output: {
+			def_index: 22,
+			quality: 15,
+			name: "Pistol",
+			texture: 0,
+			wear: 1,
+			type: "weapon",
+			needs_the: false,
+		},
+	},
 ];

@@ -143,7 +143,7 @@ export function updateUnusuals(unus: any[]): Enum {
  */
 export function updateTextures(schema_textures: Enum): Enum {
 	const ids = Object.keys(schema_textures);
-	const textures: Enum = { NoTexture: 0, 0: "NoTexture" };
+	const textures: Enum = {};
 	for (let id of ids) {
 		textures[id] = schema_textures[id];
 		textures[schema_textures[id]] = Number(id);

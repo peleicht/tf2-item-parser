@@ -68,7 +68,7 @@ Create with _Item.fromX_. Compare with _.equal(item)_. Convert with _.toX_.
 - _australium_: Whether the item is australium.
 - _festivized_: Whether the item is festivized.
 - _unusual_: The item's unusual effect (see EUnusualEffects).
-- _texture_: The item's texture (see ETexture).
+- _texture_: The item's texture (see ETexture). This can be 0 (_Red Rock Roscoe_).
 - _wear_: The item's wear (see EWear).
 - _strange_: Whether the item is strange.
 - _tradable_: Whether the item is tradable.

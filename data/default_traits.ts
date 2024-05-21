@@ -9,7 +9,6 @@ export default {
 	festivized: false,
 	unusual: 0,
 	wear: 0,
-	texture: 0,
 
 	tradable: true,
 	paint: 0,
