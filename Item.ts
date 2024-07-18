@@ -155,7 +155,8 @@ export default class Item implements ItemTraits {
 			this.usable = traits.usable;
 			this.max_uses = traits.max_uses;
 			this.remaining_uses = traits.remaining_uses;
-		} else {
+		} else this.usable = false;
+		if (this.usable === undefined || (this.usable && (!this.max_uses || !this.remaining_uses))) {
 			const [usable, max_uses, remaining_uses] = Item.identifyUses(this.def_index, this.name, this.type);
 			this.usable = usable;
 			this.max_uses = max_uses;

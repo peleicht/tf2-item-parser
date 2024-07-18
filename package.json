@@ -1,6 +1,6 @@
 {
 	"name": "tf2-item-parser",
-	"version": "1.2.0",
+	"version": "1.2.1",
 	"description": "Utility module to deal with anything related to tf2 item formats.",
 	"type": "module",
 	"main": "./dist/Item.js",
