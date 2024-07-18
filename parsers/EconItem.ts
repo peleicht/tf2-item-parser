@@ -25,7 +25,6 @@ const from_name_traits: ETraits[] = [
 	ETraits.texture,
 	ETraits.wear,
 	ETraits.strange,
-	ETraits.usable,
 	ETraits.max_uses,
 	ETraits.remaining_uses,
 	ETraits.item_number,
