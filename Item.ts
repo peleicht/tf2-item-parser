@@ -156,11 +156,11 @@ export default class Item implements ItemTraits {
 			this.max_uses = traits.max_uses;
 			this.remaining_uses = traits.remaining_uses;
 		} else this.usable = false;
-		if (this.usable === undefined || (this.usable && (!this.max_uses || !this.remaining_uses))) {
+		if (traits.usable === undefined || (this.usable && (!this.max_uses || !this.remaining_uses))) {
 			const [usable, max_uses, remaining_uses] = Item.identifyUses(this.def_index, this.name, this.type);
 			this.usable = usable;
 			this.max_uses = max_uses;
-			this.remaining_uses = remaining_uses;
+			if (!this.remaining_uses) this.remaining_uses = remaining_uses;
 		}
 
 		this.level = traits.level;
