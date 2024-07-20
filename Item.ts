@@ -121,11 +121,11 @@ export default class Item implements ItemTraits {
 		this.img = traits.img;
 		if (this.def_index === undefined || this.name == undefined || this.type == undefined || this.needs_the == undefined) {
 			let schema_item;
-			if (this.def_index != -2) schema_item = Item.getSchemaItem(this.def_index);
+			if (this.def_index >= 0) schema_item = Item.getSchemaItem(this.def_index);
 			else if (this.name != "") schema_item = Item.getSchemaItem(undefined, this.name);
-			else throw "Bad Item!";
+			else throw "Bad Item " + JSON.stringify(traits);
 			if (!schema_item) {
-				if (this.def_index != -1) throw "Bad Item!"; //dont throw if explicitly wildcard
+				if (this.def_index >= 0) throw "Bad Item " + JSON.stringify(traits); //dont throw if explicitly wildcard
 			} else {
 				if (this.def_index == -1) this.def_index = schema_item.def_index;
 				if (this.name == "") this.name = schema_item.item_name;
