@@ -97,7 +97,9 @@ Create a new item directly from known item traits.
 
 ### init(init_value?: string | Schema)
 
-Initialize the item parser with a Steam API Key or a tf2-schema instance.
+Initialize the item parser with a Steam API key or a tf2-schema instance.
+
+_Will throw when initialized with an API key, the schema cannot be fetched and the module cannot find a backup schema (module hasn't been initialized before)._
 
 ### fromName(name: string): Item | undefined
 
