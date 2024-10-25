@@ -193,8 +193,6 @@ function parseWrappedGift(name: string): ItemTraits | undefined {
 	name = name.substring(0, name.length - " a carefully wrapped gift".length);
 
 	const out_item = parseName(name);
-	if (!out_item && name != "") return;
-
 	if (out_item) {
 		traits.output_item = {
 			item: new Item(out_item),
