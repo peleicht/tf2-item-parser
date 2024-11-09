@@ -64,6 +64,67 @@ const usables_uses: NumEnum = {
 };
 const usables = Object.keys(usables_uses).map(u => Number(u));
 
+const reskins = [
+	160, // lugermorph
+	727, // black rose
+	30667, // batsaber
+	161, // big kill
+	30668, // giger counter
+	30666, // capper
+	30665, // shooting star
+	1102, // snack attack
+	1100, // bread bite
+	1121, // mutated milk
+	1105, // self-aware beauty mark
+	433, // fishcake
+	1127, // crossing guard
+	851, // awp
+	30474, // nostro napalmer
+	466, // maul
+	638, // sharp dresser
+	474, // objector
+	452, // three-rune blade
+	587, // apoco-fists
+	947, // quäckenbirdt
+	572, // unarmed combat
+	1013, // ham shank
+	574, // wanga prick
+	939, // bat outta hell
+	880, // freedom staff
+	264, // frying pan
+];
+const stock_weapons = [
+	13, // scattergun
+	22, // pistol
+	0, // bat
+	18, // rocket launcher
+	9, // shotgun
+	6, // shovel
+	21, // flame thrower
+	2, // fire axe
+	19, // grenade launcher
+	20, // stickybomb launcher
+	1, // bottle
+	15, // minigun
+	5, // fists
+	7, // wrench
+	25, // construction pda
+	26, // destruction pda
+	28, // pda
+	17, // syringe gun
+	29, // medi gun
+	8, // bone saw
+	14, // sniper rifle
+	16, // smg
+	3, // kukri
+	24, // revolver
+	735, // sapper
+	4, // knife
+	27, // disguise
+	30, // watch
+];
+const non_craft_weapons = reskins.concat(stock_weapons);
+
 export default class Item implements ItemTraits {
 	def_index: number;
 	quality: number;
@@ -343,6 +404,20 @@ export default class Item implements ItemTraits {
 	isCurrency() {
 		if (this.quality != 6 || !this.craftable) return false;
 		return this.def_index == 5021 || this.def_index == 5002 || this.def_index == 5001 || this.def_index == 5000;
+	}
+
+	isCraftWeapon() {
+		return (
+			this.quality == 6 &&
+			this.craftable &&
+			!this.killstreak &&
+			!this.festivized &&
+			!this.strange &&
+			!this.spells.length &&
+			this.type == "weapon" &&
+			!this.name.includes("Festive") &&
+			!non_craft_weapons.includes(this.def_index) // not a resking or unique stock weapon
+		);
 	}
 
 	/**
