@@ -7,4 +7,3 @@ prettierrc.json
 *.code-workspace
 *.temp
 test
-schema.json

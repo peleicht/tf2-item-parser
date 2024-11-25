@@ -6,4 +6,3 @@ data_jsons
 *.temp
 TODO
 .env
-schema.json
