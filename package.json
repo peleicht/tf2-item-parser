@@ -20,11 +20,11 @@
 	},
 	"dependencies": {
 		"tf2-backpack": "^1.2.0",
-		"tf2-item-format": "^5.9.21",
+		"tf2-item-format": "^5.9.24",
 		"@peleicht/tf2-schema": "^2.0.11"
 	},
 	"devDependencies": {
-		"dotenv": "^16.4.5",
-		"typescript": "^5.6.3"
+		"dotenv": "^16.4.7",
+		"typescript": "^5.7.2"
 	}
 }
