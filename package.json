@@ -1,6 +1,6 @@
 {
 	"name": "tf2-item-parser",
-	"version": "1.2.9",
+	"version": "1.2.10",
 	"description": "Utility module to deal with anything related to tf2 item formats.",
 	"type": "module",
 	"main": "./dist/Item.js",
@@ -21,7 +21,7 @@
 	"dependencies": {
 		"tf2-backpack": "^1.2.0",
 		"tf2-item-format": "^5.9.24",
-		"@peleicht/tf2-schema": "^2.0.11"
+		"@peleicht/tf2-schema": "^2.0.12"
 	},
 	"devDependencies": {
 		"dotenv": "^16.4.7",
