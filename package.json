@@ -21,7 +21,7 @@
 	"dependencies": {
 		"tf2-backpack": "^1.2.0",
 		"tf2-item-format": "^5.9.24",
-		"@peleicht/tf2-schema": "^2.0.12"
+		"@peleicht/tf2-schema": "^2.0.13"
 	},
 	"devDependencies": {
 		"dotenv": "^16.4.7",
