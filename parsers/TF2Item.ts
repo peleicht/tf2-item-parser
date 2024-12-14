@@ -180,7 +180,7 @@ export default function parseTF2Item(tf2_item: TF2ItemType): ItemTraits | undefi
 			if (!traits.output_item) traits.output_item = {};
 			traits.output_item.item = Item.fromTF2(tf2_item.contained_item);
 		}
-	} catch (err) {
+	} catch {
 		return;
 	}
 

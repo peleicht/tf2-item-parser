@@ -731,10 +731,10 @@ export default class Item implements ItemTraits {
 		if (this.strange) final_name += "Strange ";
 		if (this.quality !== undefined && ![6, 11, 15].includes(this.quality!) && (this.quality != 5 || !this.unusual))
 			final_name += EItemQuality[this.quality!] + " ";
-		if (this.unusual) final_name += global_info.EUnusualEffects[String(this.unusual)] + " ";
+		if (this.unusual) final_name += (global_info.EUnusualEffects[String(this.unusual)] || "Unknown Effect") + " ";
 		if (this.festivized) final_name += "Festivized ";
 		if (this.killstreak) final_name += EItemKillstreak[this.killstreak] + " ";
-		if (this.texture !== undefined) final_name += global_info.ETextures[this.texture] + " ";
+		if (this.texture !== undefined) final_name += (global_info.ETextures[this.texture] || "Unknown Texture") + " ";
 		if (this.australium) final_name += "Australium ";
 		const out = this.output_item;
 		if (out) {
