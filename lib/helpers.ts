@@ -3,7 +3,7 @@ import { dirname } from "path";
 import { fileURLToPath } from "url";
 import SchemaManager, { Schema } from "@peleicht/tf2-schema";
 import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
-import { normalizeName } from "../Item.js";
+import { ETextures, normalizeName } from "../Item.js";
 import importJSON from "../types/importJSON.js";
 import EGrades from "../enums/EGrades.js";
 
@@ -158,6 +158,19 @@ export function updateTextures(schema_textures: Enum): Enum {
 export function makeGradeMap(schema: Schema) {
 	const collections = schema.raw.items_game.item_collections;
 
+	// get lowercase texture names to map later
+	const lowercase_texture_map = new Map<string, string>();
+	for (const key in ETextures) {
+		if (typeof ETextures[key] == "string") {
+			const norm_texture = ETextures[key]
+				.replace("Mk.II", "")
+				.toLowerCase()
+				.replace(/[^a-z]/g, "");
+			lowercase_texture_map.set(norm_texture, key);
+		}
+	}
+
+	// map textures to grades
 	const new_grades_map: Map<string, EGrades> = new Map();
 	for (const key in collections) {
 		const items = collections[key].items;
@@ -166,8 +179,12 @@ export function makeGradeMap(schema: Schema) {
 				const split = item.split("_");
 				const enum_grade = EGrades[grade as keyof typeof EGrades];
 
-				if (split.length == 3) new_grades_map.set(split[2], enum_grade); // textures have format collection_item_texture
-				else new_grades_map.set(item.replace("The ", ""), enum_grade);
+				if (split.length == 3) {
+					new_grades_map.set(lowercase_texture_map.get(split[2])!, enum_grade); // textures have format collection_item_texture
+				} else if (item.startsWith("Paintkit ")) {
+					const texture_id = parseInt(item.split(" ")[1]); // or Paintkit xxx
+					new_grades_map.set(String(texture_id), enum_grade);
+				} else new_grades_map.set(item.replace("The ", ""), enum_grade);
 			}
 		}
 	}

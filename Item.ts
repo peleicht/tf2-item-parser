@@ -671,11 +671,8 @@ export default class Item implements ItemTraits {
 			grade_map = makeGradeMap(global_info.schema);
 		}
 
-		if (this.texture) {
-			const texture_str = global_info.ETextures[this.texture] as string;
-			const texture_norm = texture_str.replace("Mk.II", "").replace(/ /g, "").toLowerCase();
-			return grade_map!.get(texture_norm);
-		} else return grade_map!.get(this.name);
+		if (this.texture) return grade_map!.get(String(this.texture));
+		else return grade_map!.get(this.name);
 	}
 
 	/**
