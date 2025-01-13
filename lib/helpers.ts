@@ -5,6 +5,7 @@ import SchemaManager, { Schema } from "@peleicht/tf2-schema";
 import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
 import { normalizeName } from "../Item.js";
 import importJSON from "../types/importJSON.js";
+import EGrades from "../enums/EGrades.js";
 
 const parsed_schema = importJSON("/data/parsed_schema.json") as ParsedSchema;
 const parsed_schema_names = importJSON("/data/parsed_schema_names.json") as ParsedSchema;
@@ -152,6 +153,26 @@ export function updateTextures(schema_textures: Enum): Enum {
 
 	saveFile(textures, "ETextures");
 	return textures;
+}
+
+export function makeGradeMap(schema: Schema) {
+	const collections = schema.raw.items_game.item_collections;
+
+	const new_grades_map: Map<string, EGrades> = new Map();
+	for (const key in collections) {
+		const items = collections[key].items;
+		for (const grade in items) {
+			for (const item in items[grade]) {
+				const split = item.split("_");
+				const enum_grade = EGrades[grade as keyof typeof EGrades];
+
+				if (split.length == 3) new_grades_map.set(split[2], enum_grade); // textures have format collection_item_texture
+				else new_grades_map.set(item.replace("The ", ""), enum_grade);
+			}
+		}
+	}
+
+	return new_grades_map;
 }
 
 /**

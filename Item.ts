@@ -1,8 +1,8 @@
 import { BackpackParser } from "tf2-backpack";
 
-import { Enum, ItemTraits, ItemType, item_traits, NumEnum, ParsedSchema, ParsedSchemaEntry } from "./types/index.js";
-import { makeSchema, parseSchema, updateTextures, updateUnusuals } from "./lib/helpers.js";
 import default_traits from "./data/default_traits.js";
+import { makeGradeMap, makeSchema, parseSchema, updateTextures, updateUnusuals } from "./lib/helpers.js";
+import { Enum, item_traits, ItemTraits, ItemType, NumEnum, ParsedSchema, ParsedSchemaEntry } from "./types/index.js";
 
 import EItemKillstreak from "./enums/EItemKillstreak.js";
 import EItemQuality from "./enums/EItemQuality.js";
@@ -10,10 +10,18 @@ import EItemWear from "./enums/EItemWear.js";
 import EKillstreaker from "./enums/EKillstreaker.js";
 import EKillstreakSheen from "./enums/EKillstreakSheen.js";
 import ESpells from "./enums/ESpells.js";
-import ETraits from "./enums/ETraits.js";
 import EStrangeParts from "./enums/EStrangeParts.js";
+import ETraits from "./enums/ETraits.js";
 
-import importJSON from "./types/importJSON.js";
+import { Schema } from "@peleicht/tf2-schema";
+import EGrades from "./enums/EGrades.js";
+import parseBPDocument from "./parsers/BPDocument.js";
+import parseBPURLItem from "./parsers/BPURLItem.js";
+import parseEconItem from "./parsers/EconItem.js";
+import parseItemFormatItem from "./parsers/ItemFormatItem.js";
+import parseName from "./parsers/NameItem.js";
+import parseSKU from "./parsers/SKUItem.js";
+import parseTF2Item from "./parsers/TF2Item.js";
 import {
 	AllFormatAttributes,
 	BPDocumentType,
@@ -23,14 +31,7 @@ import {
 	TF2ItemType,
 	TradeOfferManagerItem,
 } from "./types/foreign_items.js";
-import parseName from "./parsers/NameItem.js";
-import parseSKU from "./parsers/SKUItem.js";
-import parseEconItem from "./parsers/EconItem.js";
-import parseTF2Item from "./parsers/TF2Item.js";
-import parseBPDocument from "./parsers/BPDocument.js";
-import parseBPURLItem from "./parsers/BPURLItem.js";
-import parseItemFormatItem from "./parsers/ItemFormatItem.js";
-import { Schema } from "@peleicht/tf2-schema";
+import importJSON from "./types/importJSON.js";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 const _ETextures = importJSON("/enums/ETextures.json") as Enum;
@@ -125,6 +126,8 @@ const stock_weapons = [
 ];
 const non_craft_weapons = reskins.concat(stock_weapons);
 
+let grade_map: Map<string, EGrades> | undefined = undefined; // maps name/texture to grade
+
 export default class Item implements ItemTraits {
 	def_index: number;
 	quality: number;
@@ -184,9 +187,9 @@ export default class Item implements ItemTraits {
 			let schema_item;
 			if (this.def_index >= 0) schema_item = Item.getSchemaItem(this.def_index);
 			else if (this.name != "") schema_item = Item.getSchemaItem(undefined, this.name);
-			else throw "Bad Item " + JSON.stringify(traits);
+			else throw new Error("Bad Item " + JSON.stringify(traits));
 			if (!schema_item) {
-				if (this.def_index >= 0) throw "Bad Item " + JSON.stringify(traits); //dont throw if explicitly wildcard
+				if (this.def_index >= 0) throw new Error("Bad Item " + JSON.stringify(traits)); //dont throw if explicitly wildcard
 			} else {
 				if (this.def_index == -1) this.def_index = schema_item.def_index;
 				if (this.name == "") this.name = schema_item.item_name;
@@ -621,7 +624,7 @@ export default class Item implements ItemTraits {
 	 * Creates a TradeOfferManager item from the Item. Used for sending trade offers using steam-tradeoffer-manager.
 	 */
 	toTradeOfferManagerItem(): TradeOfferManagerItem {
-		if (!this.id) throw "Cannot construct TradeOfferManager item without an id: " + this.toString();
+		if (!this.id) throw new Error("Cannot construct TradeOfferManager item without an id: " + this.toString());
 		return { assetid: this.id, appid: 440, contextid: 2 };
 	}
 
@@ -660,6 +663,19 @@ export default class Item implements ItemTraits {
 		}
 
 		return true;
+	}
+
+	getGrade() {
+		if (!grade_map) {
+			if (!global_info.schema) throw new Error("Cannot get grade before schema is loaded!");
+			grade_map = makeGradeMap(global_info.schema);
+		}
+
+		if (this.texture) {
+			const texture_str = global_info.ETextures[this.texture] as string;
+			const texture_norm = texture_str.replace("Mk.II", "").replace(/ /g, "").toLowerCase();
+			return grade_map!.get(texture_norm);
+		} else return grade_map!.get(this.name);
 	}
 
 	/**
@@ -724,7 +740,7 @@ export default class Item implements ItemTraits {
 	/**
 	 * Converts the Item into an easily readable String without Name. Does not includes wear, item number or uses.
 	 */
-	startAttributesToText() {
+	private startAttributesToText() {
 		let final_name = "";
 		if (!this.tradable) final_name += "Non-Tradable ";
 		if (!this.craftable) final_name += "Non-Craftable ";
@@ -883,10 +899,25 @@ export function replaceSpecialCharacters(text: string) {
 }
 
 const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
-export { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects };
-export { EItemKillstreak, EItemQuality, EItemWear, EKillstreaker, EKillstreakSheen, ESpells, ETraits, EPaints, EStrangeParts };
 export * from "./types/foreign_items.js";
 export * from "./types/index.js";
+export {
+	EItemKillstreak,
+	EItemQuality,
+	EItemWear,
+	EKillstreaker,
+	EKillstreakSheen,
+	EPaints,
+	ESpells,
+	EStrangeParts,
+	ETextures,
+	ETraits,
+	EUnusualEffects,
+	parsed_schema,
+	parsed_schema_names,
+	parsed_schema_norm_names,
+	promos,
+};
 
 /**
  * After calling *init*, this will return true when the Item class is ready to be used.
