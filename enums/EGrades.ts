@@ -1,16 +1,16 @@
 enum EGrades {
-	"common" = 0,
-	"uncommon" = 1,
-	"rare" = 2,
-	"mythical" = 3,
-	"legendary" = 4,
-	"ancient" = 5,
-	"Civilian" = 0,
-	"Freelance" = 1,
-	"Mercenary" = 2,
-	"Commando" = 3,
-	"Assassin" = 4,
-	"Elite" = 5
+	"common" = 1,
+	"uncommon" = 2,
+	"rare" = 3,
+	"mythical" = 4,
+	"legendary" = 5,
+	"ancient" = 6,
+	"Civilian" = 1,
+	"Freelance" = 2,
+	"Mercenary" = 3,
+	"Commando" = 4,
+	"Assassin" = 5,
+	"Elite" = 6,
 }
 
 export default EGrades;
