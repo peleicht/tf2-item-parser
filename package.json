@@ -20,7 +20,7 @@
 	},
 	"dependencies": {
 		"tf2-backpack": "^1.2.0",
-		"tf2-item-format": "^5.9.25",
+		"tf2-item-format": "^5.9.26",
 		"@peleicht/tf2-schema": "^2.0.13"
 	},
 	"devDependencies": {

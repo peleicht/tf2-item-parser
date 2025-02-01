@@ -737,7 +737,7 @@ export default class Item implements ItemTraits {
 	/**
 	 * Converts the Item into an easily readable String without Name. Does not includes wear, item number or uses.
 	 */
-	private startAttributesToText() {
+	startAttributesToText() {
 		let final_name = "";
 		if (!this.tradable) final_name += "Non-Tradable ";
 		if (!this.craftable) final_name += "Non-Craftable ";
@@ -773,7 +773,7 @@ export default class Item implements ItemTraits {
 		return final_name.trim();
 	}
 
-	private endAttributesToText(include_uses: boolean) {
+	endAttributesToText(include_uses: boolean) {
 		let final_name = "";
 		if (this.wear) final_name += " (" + EItemWear[this.wear] + ")";
 		if (this.type == "supply_crate" && this.item_number !== undefined) {

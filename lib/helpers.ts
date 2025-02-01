@@ -27,8 +27,8 @@ export async function makeSchema(steam_api_key: string): Promise<Schema> {
 	try {
 		await schemaManager.init();
 	} catch (err) {
-		console.warn("SchemaManager init failed: " + err);
-		console.warn("Using backup schema...");
+		console.info("SchemaManager init failed: " + err);
+		console.info("Using backup schema...");
 
 		//use backup schema
 		try {
