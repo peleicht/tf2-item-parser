@@ -42,8 +42,6 @@ async function doTests() {
 
 	console.log("\nSucceeded with " + successes + "/" + total + " tests.");
 
-	process.exit();
-
 	function test(tests, func, title = "title", input_parse = "func", output_parse = "json") {
 		let i = 0;
 
