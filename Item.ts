@@ -22,15 +22,7 @@ import parseItemFormatItem from "./parsers/ItemFormatItem.js";
 import parseName from "./parsers/NameItem.js";
 import parseSKU from "./parsers/SKUItem.js";
 import parseTF2Item from "./parsers/TF2Item.js";
-import {
-	AllFormatAttributes,
-	BPDocumentType,
-	BPDocumentTypeOutgoing,
-	BPItemV1,
-	EconItemType,
-	TF2ItemType,
-	TradeOfferManagerItem,
-} from "./types/foreign_items.js";
+import { AllFormatAttributes, BPDocumentType, BPDocumentTypeOutgoing, BPItemV1, EconItemType, TF2ItemType, TradeOfferManagerItem } from "./types/foreign_items.js";
 import importJSON from "./types/importJSON.js";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const _EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
@@ -49,7 +41,7 @@ export const global_info = {
 	tf2_item_parser: undefined as BackpackParser | undefined,
 	EUnusualEffects: _EUnusualEffects,
 	ETextures: _ETextures,
-	schema: undefined as Schema | undefined,
+	schema: undefined as Schema | undefined
 };
 
 const usables_uses: NumEnum = {
@@ -61,7 +53,7 @@ const usables_uses: NumEnum = {
 	9258: 1, //unusualifier
 	9536: 1, //war paint
 	20000: 1, //chemistry set
-	20002: 1, //fabricator
+	20002: 1 //fabricator
 };
 const usables = Object.keys(usables_uses).map(u => Number(u));
 
@@ -92,7 +84,7 @@ const reskins = [
 	574, // wanga prick
 	939, // bat outta hell
 	880, // freedom staff
-	264, // frying pan
+	264 // frying pan
 ];
 const stock_weapons = [
 	13, // scattergun
@@ -122,7 +114,7 @@ const stock_weapons = [
 	735, // sapper
 	4, // knife
 	27, // disguise
-	30, // watch
+	30 // watch
 ];
 const non_craft_weapons = reskins.concat(stock_weapons);
 
@@ -539,16 +531,16 @@ export default class Item implements ItemTraits {
 			elevatedQuality: this.strange && this.quality != 11 ? { id: 11 } : undefined,
 			spells: this.spells.map(s => {
 				return {
-					name: ESpells[s],
+					name: ESpells[s]
 				};
 			}),
 			strangeParts: this.strange_parts.map(p => {
 				return {
 					killEater: {
-						id: p,
-					},
+						id: p
+					}
 				};
-			}),
+			})
 		};
 
 		const out = this.output_item;
@@ -564,7 +556,7 @@ export default class Item implements ItemTraits {
 			const index = target || out?.item?.target_def_index || out?.item?.def_index;
 			if (index !== undefined) {
 				doc.recipe.targetItem = {
-					itemName: new Item({ def_index: index }).name!,
+					itemName: new Item({ def_index: index }).name!
 				};
 			}
 		}
@@ -582,7 +574,7 @@ export default class Item implements ItemTraits {
 			item_name: this.toBPName(),
 			quality: quality,
 			craftable: this.craftable,
-			priceindex: this.getBPPriceIndex(),
+			priceindex: this.getBPPriceIndex()
 		};
 	}
 	private toBPName() {
@@ -742,8 +734,7 @@ export default class Item implements ItemTraits {
 		if (!this.tradable) final_name += "Non-Tradable ";
 		if (!this.craftable) final_name += "Non-Craftable ";
 		if (this.strange) final_name += "Strange ";
-		if (this.quality !== undefined && ![6, 11, 15].includes(this.quality!) && (this.quality != 5 || !this.unusual))
-			final_name += EItemQuality[this.quality!] + " ";
+		if (this.quality !== undefined && ![6, 11, 15].includes(this.quality!) && (this.quality != 5 || !this.unusual)) final_name += EItemQuality[this.quality!] + " ";
 		if (this.unusual) final_name += (global_info.EUnusualEffects[String(this.unusual)] || "Unknown Effect") + " ";
 		if (this.festivized) final_name += "Festivized ";
 		if (this.killstreak) final_name += EItemKillstreak[this.killstreak] + " ";
@@ -913,7 +904,7 @@ export {
 	parsed_schema,
 	parsed_schema_names,
 	parsed_schema_norm_names,
-	promos,
+	promos
 };
 
 /**
