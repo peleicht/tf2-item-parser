@@ -16,7 +16,7 @@
 	"homepage": "https://github.com/peleicht/tf2-item-parser",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/peleicht/tf2-item-parser"
+		"url": "git+https://github.com/peleicht/tf2-item-parser.git"
 	},
 	"dependencies": {
 		"@peleicht/tf2-schema": "^2.0.13",
