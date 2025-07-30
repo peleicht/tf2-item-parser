@@ -5,7 +5,7 @@ import { ParsedEconItem } from "tf2-item-format/dist/types/index.js";
 /**
  * Type for items from the steam api, node-steam-user, node-steamcommunity and node-tradeoffer-manager.
  */
-export type EconItemType = CEconItem & {
+export type EconItemType = Omit<CEconItem, "getTag" | "getImageURL" | "getLargeImageURL"> & {
 	icon_url?: string;
 	icon_url_large?: string;
 };
