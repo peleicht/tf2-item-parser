@@ -1,53 +1,13 @@
+import CEconItem from "steamcommunity/classes/CEconItem";
 import { ItemAttributes } from "tf2-item-format/.";
 import { ParsedEconItem } from "tf2-item-format/dist/types/index.js";
 
 /**
- * Type for items from the steam api, node-steam-user and node-steamcommunity.
+ * Type for items from the steam api, node-steam-user, node-steamcommunity and node-tradeoffer-manager.
  */
-export type EconItemType = {
-	assetid: string;
-	descriptions?: EconDescription[];
-	name: string;
-	market_name: string;
-	market_hash_name: string;
-	tags: EconTag[];
-	app_data?: { def_index: number; quality: number; quantity?: string };
-	type: string;
-
-	tradable: number | boolean;
-	commodity: number | boolean;
-	marketable: number | boolean;
-
+export type EconItemType = CEconItem & {
 	icon_url?: string;
 	icon_url_large?: string;
-	appid?: number;
-	contextid?: string;
-	instanceid?: string;
-	classid?: string;
-	amount?: string;
-	currency?: number;
-	actions?: EconAction[];
-	market_actions?: EconAction[];
-	background_color?: string;
-	name_color?: string;
-	market_tradable_restriction?: number;
-	market_marketable_restriction?: number;
-	fraudwarnings?: string[];
-};
-type EconAction = { link: string; name: string };
-type EconDescription = {
-	value: string;
-	type?: string; //"usertext" for custom names/descriptions
-	color?: string;
-	app_data?: { def_index: number };
-};
-type EconTag = {
-	name?: string;
-	category: string;
-	internal_name: string;
-	localized_category_name?: string;
-	localized_tag_name?: string;
-	color?: string;
 };
 
 /**
