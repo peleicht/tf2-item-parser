@@ -5,12 +5,11 @@ import EStrangeParts from "../enums/EStrangeParts.js";
 import { Enum, ItemTraits, item_traits } from "../types/index.js";
 
 import importJSON from "../types/importJSON.js";
-import { EconItemType } from "../types/foreign_items.js";
 import EKillstreakSheen from "../enums/EKillstreakSheen.js";
 import EKillstreaker from "../enums/EKillstreaker.js";
 import ESpells from "../enums/ESpells.js";
 import default_traits from "../data/default_traits.js";
-import Item from "../Item.js";
+import Item, { EconItemType } from "../Item.js";
 const EPaints = importJSON("/enums/EPaints.json") as Enum;
 const EUnusualEffects = importJSON("/enums/EUnusualEffects.json") as Enum;
 
@@ -32,7 +31,7 @@ const from_name_traits: ETraits[] = [
 	ETraits.output_item,
 	ETraits.type,
 	ETraits.needs_the,
-	ETraits.img,
+	ETraits.img
 ];
 
 /**
@@ -41,10 +40,10 @@ const from_name_traits: ETraits[] = [
 export default function parseEconItem(econ_item: EconItemType): ItemTraits | undefined {
 	const traits: ItemTraits = {};
 
-	traits.id = econ_item.assetid;
+	traits.id = String(econ_item.assetid);
 	traits.tradable = Boolean(econ_item.tradable);
 
-	const name_item = Item.fromName(econ_item.market_name || econ_item.name, true);
+	const name_item = Item.fromName(econ_item.market_hash_name || econ_item.name, true);
 	if (!name_item) return;
 
 	//sync name item with this
@@ -162,7 +161,7 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 				//@ts-ignore
 				const spell_id = ESpells[spell_name];
 				if (!traits.spells) traits.spells = [];
-				traits.spells.push(spell_id);
+				traits.spells.push(Number(spell_id));
 				inside_block = ETraits.spells;
 				if (descs.length == 0) break;
 			} else {
