@@ -325,12 +325,12 @@ export default class Item implements ItemTraits {
 	}
 
 	protected static makeItem(input: any, parser: (...input: any) => ItemTraits | undefined, ...args: any[]) {
-		const traits = parser(input, ...args);
-		if (traits) {
-			try {
+		try {
+			const traits = parser(input, ...args);
+			if (traits) {
 				return new Item(traits);
-			} catch {}
-		}
+			}
+		} catch {}
 	}
 
 	/**

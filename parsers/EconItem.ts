@@ -43,7 +43,7 @@ export default function parseEconItem(econ_item: EconItemType): ItemTraits | und
 	traits.id = String(econ_item.assetid);
 	traits.tradable = Boolean(econ_item.tradable);
 
-	const name_item = Item.fromName(econ_item.market_hash_name || econ_item.name, true);
+	const name_item = Item.fromName(econ_item.market_hash_name || econ_item.name || "", true);
 	if (!name_item) return;
 
 	//sync name item with this
