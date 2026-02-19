@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/steamcommunity": "^3.43.8",
-		"dotenv": "^17.2.3",
+		"dotenv": "^17.3.1",
 		"steamcommunity": "^3.49.0",
 		"tf2-item-format": "^5.10.0",
 		"typescript": "^5.9.3"
