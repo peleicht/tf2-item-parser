@@ -254,7 +254,6 @@ export default class Item implements ItemTraits {
 		const tex = updateTextures(schema.raw.schema.paintkits);
 
 		replaceObjectContents(global_info.EUnusualEffects, unu);
-		Object.assign(global_info.EUnusualEffects, unu);
 		replaceObjectContents(global_info.ETextures, tex);
 		replaceObjectContents(global_info.parsed_schema, bschema);
 		replaceObjectContents(global_info.parsed_schema_names, bschema_names);
