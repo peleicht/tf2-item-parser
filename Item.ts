@@ -893,8 +893,10 @@ export function replaceSpecialCharacters(text: string) {
  * @param source - The source object to replace the contents of the target with.
  */
 function replaceObjectContents<T extends Record<string, any>>(target: T, source: T): void {
-	for (const key of Object.keys(target)) delete target[key];
-	for (const key of Object.keys(source)) (target as Record<string, any>)[key] = source[key];
+	Object.assign(target, source);
+	for (const k of Object.keys(target)) {
+		if (!(k in source)) delete (target as Record<string, any>)[k];
+	}
 }
 
 const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
