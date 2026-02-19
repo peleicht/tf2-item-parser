@@ -253,12 +253,12 @@ export default class Item implements ItemTraits {
 		const unu = updateUnusuals(schema.raw.schema.attribute_controlled_attached_particles);
 		const tex = updateTextures(schema.raw.schema.paintkits);
 
-		global_info.EUnusualEffects = unu;
-		global_info.ETextures = tex;
-		global_info.parsed_schema = bschema;
-		global_info.parsed_schema_names = bschema_names;
-		global_info.parsed_schema_norm_names = bschema_norm_names;
-		global_info.promos = npromos;
+		replaceObjectContents(global_info.EUnusualEffects, unu);
+		replaceObjectContents(global_info.ETextures, tex);
+		replaceObjectContents(global_info.parsed_schema, bschema);
+		replaceObjectContents(global_info.parsed_schema_names, bschema_names);
+		replaceObjectContents(global_info.parsed_schema_norm_names, bschema_norm_names);
+		replaceObjectContents(global_info.promos, npromos);
 		global_info.tf2_item_parser = new BackpackParser(schema.raw.items_game);
 		global_info.schema = schema;
 		global_info.ready = true;
@@ -752,7 +752,8 @@ export default class Item implements ItemTraits {
 						const out_target_item = global_info.parsed_schema[out.item.target_def_index];
 						if (out_target_item) output_name = out_target_item.item_name; //can be unknown in tf2 items, gliched fabricators
 					}
-					if (output_name != "") final_name += output_name + " " + out.item.name; //dont show ks or uncraftable in kit fabricator
+					if (output_name != "")
+						final_name += output_name + " " + out.item.name; //dont show ks or uncraftable in kit fabricator
 					else final_name += out.item.name;
 				} else final_name += out.item!.toString();
 			}
@@ -884,6 +885,16 @@ export function replaceSpecialCharacters(text: string) {
 	new_text = new_text.replace(/\n/g, " ");
 	while (new_text.includes("  ")) new_text = new_text.replace(/  /g, " "); //remove double spaces
 	return new_text.trim();
+}
+
+/**
+ * Replaces target's own keys with source's. Keeps the same object reference so re-exported bindings see updates.
+ * @param target - The target object to replace the contents of.
+ * @param source - The source object to replace the contents of the target with.
+ */
+function replaceObjectContents<T extends Record<string, any>>(target: T, source: T): void {
+	for (const key of Object.keys(target)) delete target[key];
+	for (const key of Object.keys(source)) (target as Record<string, any>)[key] = source[key];
 }
 
 const { parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos, ETextures, EUnusualEffects } = global_info;
