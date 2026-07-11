@@ -1,6 +1,5 @@
-import CEconItem from "steamcommunity/classes/CEconItem";
-import { ItemAttributes } from "tf2-item-format/.";
-import { ParsedEconItem } from "tf2-item-format/dist/types/index.js";
+import type CEconItem = require("steamcommunity/classes/CEconItem");
+import { ItemAttributes, ParsedEconItem } from "tf2-item-format";
 
 /**
  * Type for items from the steam api, node-steam-user, node-steamcommunity and node-tradeoffer-manager.

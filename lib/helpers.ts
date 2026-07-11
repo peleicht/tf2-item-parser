@@ -2,7 +2,7 @@ import { writeFile, rename } from "fs";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 import SchemaManager, { Schema } from "@peleicht/tf2-schema";
-import { ParsedSchema, Enum, NumEnum, ItemType } from "../types";
+import { ParsedSchema, Enum, NumEnum, ItemType } from "../types/index.js";
 import { ETextures, normalizeName } from "../Item.js";
 import importJSON from "../types/importJSON.js";
 import EGrades from "../enums/EGrades.js";

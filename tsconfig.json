@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
 		"target": "ES6",
-		"module": "es2022",
-		"moduleResolution": "node",
+		"module": "node18",
+		"moduleResolution": "node16",
 		"esModuleInterop": true,
 		"declaration": true,
 		"strict": true,
@@ -10,7 +10,10 @@
 		"skipLibCheck": true,
 		"sourceMap": true,
 		"outDir": "dist",
-		"allowJs": true
+		"allowJs": true,
+		"paths": {
+			"steamcommunity/classes/CEconItem": ["./node_modules/@types/steamcommunity/classes/CEconItem.d.ts"]
+		}
 	},
 	"include": ["**/*.ts"],
 	"exclude": ["node_modules", "dist", "test", "types/node-tf2-item-format"]
