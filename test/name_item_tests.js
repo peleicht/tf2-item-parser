@@ -43,6 +43,24 @@ export default [
 		},
 	},
 	{
+		input: "Polar Prism Team Captain",
+		expected_output: {
+			def_index: 378,
+			quality: 5,
+			name: "Team Captain",
+			unusual: 408,
+		},
+	},
+	{
+		input: "Northern Nights Team Captain",
+		expected_output: {
+			def_index: 378,
+			quality: 5,
+			name: "Team Captain",
+			unusual: 408,
+		},
+	},
+	{
 		input: "Skill Gotten Gains Taunt: The Skating Scorcher",
 		expected_output: {
 			def_index: 30919,

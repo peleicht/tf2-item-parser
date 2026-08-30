@@ -607,6 +607,42 @@ export default [
 		},
 	},
 	{
+		title: "Unusual Team Captain (legacy Northern Nights effect name)",
+		input: {
+			appid: 440,
+			contextid: "2",
+			assetid: "1",
+			id: "1",
+			tradable: true,
+			name: "Unusual Team Captain",
+			market_hash_name: "Unusual Team Captain",
+			type: "Level 10 Hat",
+			descriptions: [
+				{
+					value: "★ Unusual Effect: Northern Nights",
+					color: "ffd700",
+				},
+			],
+			tags: [
+				{
+					internal_name: "rarity4",
+					name: "Unusual",
+					category: "Quality",
+					color: "8650AC",
+					category_name: "Quality",
+				},
+			],
+		},
+		expected_output: {
+			def_index: 378,
+			quality: 5,
+			name: "Team Captain",
+			id: "1",
+			unusual: 408,
+			level: 10,
+		},
+	},
+	{
 		title: "Skill Gotten Gains Taunt: The Skating Scorcher",
 		input: {
 			appid: 440,

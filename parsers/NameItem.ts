@@ -56,8 +56,8 @@ export default function parseName(name: string, strict = false): ItemTraits | un
 			if (effect) {
 				if (traits.quality != EItemQuality["Decorated Weapon"]) traits.quality = EItemQuality.Unusual;
 				traits.unusual = effect;
-				const effect_i = trait_maps.unusual_ids.findIndex(id => id == effect)!;
-				cut_name = cut_name.substring(trait_maps.unusual_list[effect_i].length + 1);
+				const effect_name = trait_maps.unusual_list.find(n => cut_name.startsWith(n + " "))!;
+				cut_name = cut_name.substring(effect_name.length + 1);
 				removed_something = true;
 				continue; //recheck if cut_name is done so as to not parse away "vintage" in vintage tyrolean
 			}

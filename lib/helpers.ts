@@ -46,8 +46,7 @@ export async function makeSchema(steam_api_key: string): Promise<Schema> {
  * Normalizes the names in the Schema, writes them to item.norm_item_name. Updated promos, then restarts bot if anything changed.
  */
 export function parseSchema(schema: Schema): [ParsedSchema, ParsedSchema, ParsedSchema, NumEnum] {
-	if (schema.raw.schema.items.length == Object.keys(parsed_schema).length)
-		return [parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos];
+	if (schema.raw.schema.items.length == Object.keys(parsed_schema).length) return [parsed_schema, parsed_schema_names, parsed_schema_norm_names, promos];
 
 	const item_type_mapping: { [key: string]: string } = {
 		melee: "weapon",
@@ -58,7 +57,7 @@ export function parseSchema(schema: Schema): [ParsedSchema, ParsedSchema, Parsed
 		building: "weapon",
 		upgrade: "action",
 		saxxy: "utility",
-		class_token: "craft_item",
+		class_token: "craft_item"
 	};
 
 	const new_parsed_schema: ParsedSchema = {};
@@ -72,7 +71,7 @@ export function parseSchema(schema: Schema): [ParsedSchema, ParsedSchema, Parsed
 			proper_name: item.proper_name,
 			type: (item_type_mapping[item.item_slot] || item.item_slot || item.item_class) as ItemType,
 			norm_item_name: normalizeName(item.item_name),
-			img: item.image_url_large,
+			img: item.image_url_large
 		};
 		new_parsed_schema[parsed.def_index] = parsed;
 		if (!new_parsed_schema_names[parsed.item_name]) new_parsed_schema_names[parsed.item_name] = parsed;
@@ -93,7 +92,7 @@ export function parseSchema(schema: Schema): [ParsedSchema, ParsedSchema, Parsed
  */
 export function getPromos(mod_schema: ParsedSchema): NumEnum {
 	const doubles: { [key: number]: number } = {
-		294: 160, //lugermorph (Vintage / Unique)
+		294: 160 //lugermorph (Vintage / Unique)
 	};
 
 	const found = [294];
@@ -134,6 +133,9 @@ export function updateUnusuals(unus: any[]): Enum {
 		parsed_unus[entry.id] = entry.name;
 		if (!parsed_unus[entry.name]) parsed_unus[entry.name] = entry.id;
 	}
+
+	// Old names still used by some services after Valve renames
+	parsed_unus["Northern Nights"] = 408;
 
 	saveFile(parsed_unus, "EUnusualEffects");
 	return parsed_unus;

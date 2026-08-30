@@ -72,6 +72,26 @@ export default [
 		},
 	},
 	{
+		title: "Northern Nights Team Captain (legacy effect name)",
+		input: {
+			name: "Team Captain",
+			fullName: "Northern Nights Team Captain",
+			tradable: true,
+			craftable: true,
+			quality: 5,
+			effect: "Northern Nights",
+			defindex: 378,
+			parts: [],
+			spells: [],
+		},
+		expected_output: {
+			def_index: 378,
+			quality: 5,
+			name: "Team Captain",
+			unusual: 408,
+		},
+	},
+	{
 		title: "Skill Gotten Gains Taunt: The Skating Scorcher",
 		input: {
 			name: "Taunt: The Skating Scorcher",
