@@ -95,32 +95,30 @@ export function getPromos(mod_schema: ParsedSchema): NumEnum {
 		294: 160 //lugermorph (Vintage / Unique)
 	};
 
-	const found = [294];
+	const skipped = new Set<number>([294]);
+	const first_by_name = new Map<string, number>();
 
-	const def_indexes = Object.keys(mod_schema);
-	for (let i = 0; i < def_indexes.length; i++) {
-		const item0 = mod_schema[def_indexes[i]];
+	for (const key of Object.keys(mod_schema)) {
+		const item = mod_schema[key];
+		const def_index = item.def_index;
+		const name = item.norm_item_name;
 
-		if (ignore(item0.def_index, item0.norm_item_name)) continue;
+		if (skipped.has(def_index) || (def_index >= 8000 && def_index < 15000 && def_index != 9536) || name == "") continue;
 
-		const promo_name = "promo " + item0.norm_item_name;
-		const upgradeable_name = "upgradeable " + item0.norm_item_name;
-		for (let j = i + 1; j < def_indexes.length; j++) {
-			const item1 = mod_schema[def_indexes[j]];
-			if (ignore(item1.def_index, item1.norm_item_name)) continue;
+		let canonical = first_by_name.get(name);
+		if (canonical === undefined && name.startsWith("promo ")) canonical = first_by_name.get(name.slice("promo ".length));
+		if (canonical === undefined && name.startsWith("upgradeable ")) canonical = first_by_name.get(name.slice("upgradeable ".length));
 
-			if (item0.norm_item_name == item1.norm_item_name || promo_name == item1.norm_item_name || upgradeable_name == item1.norm_item_name) {
-				doubles[item1.def_index] = item0.def_index;
-				found.push(item1.def_index);
-			}
+		if (canonical !== undefined) {
+			doubles[def_index] = canonical;
+			skipped.add(def_index);
+			continue;
 		}
+
+		first_by_name.set(name, def_index);
 	}
 
 	return doubles;
-
-	function ignore(def_index: number, name: string) {
-		return found.includes(def_index) || (def_index >= 8000 && def_index < 15000 && def_index != 9536) || name == "";
-	}
 }
 
 /**

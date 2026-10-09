@@ -1,6 +1,6 @@
 {
 	"name": "tf2-item-parser",
-	"version": "1.3.10",
+	"version": "1.4.0",
 	"description": "Utility module to deal with anything related to tf2 item formats.",
 	"type": "module",
 	"main": "./dist/Item.js",
@@ -24,7 +24,7 @@
 	},
 	"devDependencies": {
 		"@types/steamcommunity": "^3.50.0",
-		"dotenv": "^17.4.2",
+		"dotenv": "^18.0.6",
 		"steamcommunity": "^3.50.3",
 		"tf2-item-format": "^5.10.3",
 		"typescript": "^7.0.2"
